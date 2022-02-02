@@ -11,4 +11,5 @@ public interface AccountRepository extends JpaRepository<Account,Long> {
     //이메일 중복여부를 확인합니다.
     boolean existsByNickname(String nickname);
     //닉네임 중복여부를 확인합니다.
+    Account findByEmail(String email);
 }
