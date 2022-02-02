@@ -9,9 +9,11 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AccountService {
 
     private final AccountRepository accountRepository;
@@ -55,5 +57,9 @@ public class AccountService {
         //이메일 인증용 토큰을 생성한다.
         saveVerificationEmail(newAccount);
     }
-
+    @Transactional(readOnly = true)
+    public Account findAccountByEmail(String email) {
+        return accountRepository.findByEmail(email);
+        //이메일로 계정을 찾아 반환
+    }
 }

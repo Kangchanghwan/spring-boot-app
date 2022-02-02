@@ -3,8 +3,10 @@ package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 import clone.jaime.app.springbootapp.server.account.application.AccountService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.validator.SignUpFormValidator;
+import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
@@ -21,6 +23,7 @@ public class AccountController {
 
     private final SignUpFormValidator signUpFormValidator;
     private final AccountService accountService;
+    private final AccountRepository accountRepository;
 
     @InitBinder("signUpForm") // (1)
     public void initBinder(WebDataBinder webDataBinder) {
@@ -47,7 +50,29 @@ public class AccountController {
         accountService.signup(signUpForm);
         return "redirect:/";
     }
-
+    @GetMapping("/check-email-token")
+    @Transactional
+    public String verifyEmail(String token,String email, Model model){
+        //이메일 링크를 클릭하면 접속하게 되는 컨트롤러이다.
+        Account account = accountService.findAccountByEmail(email);
+        //accountService에게 계정정보를 가져오도록 위임한다.
+        if(account == null){
+            model.addAttribute("error", "wrong.email");
+            return "account/email-verification";
+        }
+        //가입된 사용자가 아닌경우 오류를 발생시킨다.
+        if(!token.equals(account.getEmailToken())){
+            model.addAttribute("error","wrong.token");
+            return "account/email-verification";
+        }
+        //가입된 사용자이나 발급한 토큰과 맞지 않는다면 오류를 발생시킨다.
+        account.verified();
+        //인증 완료된 계정의 인증정보를 완료로 바꾼다.
+        model.addAttribute("numberOfUser",accountRepository.count());
+        model.addAttribute("nickname",account.getNickname());
+        //인증에 성공할 시 보여줄 정보를 model에 담아 보낸다.
+        return "account/email-verification";
+    }
 
 
 

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html th:fragment="layout (title, content,script)"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,20 +33,36 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarsExample04">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <form th:action="@{/search/study}" class="form-inline" method="get">
-                        <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="스터디 찾기"
-                               aria-label="Search"/>
-                    </form>
-                </li>
-            </ul>
             <ul class="navbar-nav justify-content-end">
-                <li class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{/login}">로그인</a>
+                <li class="nav-item" sec:authorize="!isAuthenticated()"> <!--(2)-->
+                    <a class="nav-link" th:href="@{/login}">로그인</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{/sign-up}">가입</a>
+                <li class="nav-item" sec:authorize="!isAuthenticated()"> <!--(2)-->
+                    <a class="nav-link" th:href="@{/sign-up}">가입</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()"> <!--(2)-->
+                    <a class="nav-link" th:href="@{/notifications}">알림</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()"> <!--(2)-->
+                    <a class="nav-link btn btn-outline-primary" th:href="@{/notifications}">스터디 개설</a>
+                </li>
+                <li class="nav-item dropdown" sec:authorize="isAuthenticated()"> <!--(2)-->
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        프로필
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-sm-right" aria-labelledby="userDropdown">
+                        <h6 class="dropdown-header">
+                            <span sec:authentication="name">Username</span> <!--(2)-->
+                        </h6>
+                        <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">프로필</a>
+                        <a class="dropdown-item">스터디</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" th:href="@{'/settings/profile'}">설정</a>
+                        <form class="form-inline my-2 my-lg-0" action="#" th:action="@{/logout}" method="post">
+                            <button class="dropdown-item" type="submit">로그아웃</button>
+                        </form>
+                    </div>
                 </li>
             </ul>
         </div>

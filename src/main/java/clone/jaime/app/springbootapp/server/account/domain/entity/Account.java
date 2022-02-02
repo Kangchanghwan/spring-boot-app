@@ -5,6 +5,7 @@ import clone.jaime.app.springbootapp.server.account.domain.entity.support.ListSt
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ import java.util.UUID;
 @Getter
 @ToString
 // 값조회만 가능하게 하였고, 값 세팅은 필요에따라 메서드로 추가할 예정
-public class Account {
+public class Account extends AuditingEntity{
 
     @Id @GeneratedValue
     @Column(name="account_id")
@@ -29,7 +30,7 @@ public class Account {
     private String nickname;
     //사용자들에게 노출될 닉네임이다. 유니크 제약 조건을 추가해 고유값만 가질 수 있다.
     private String password;
-
+    private LocalDateTime joinedAt;
     private Boolean isValid;
 
     private String emailToken;
@@ -44,6 +45,11 @@ public class Account {
         this.emailToken = UUID.randomUUID().toString();
         //UUID(Universally Unique IDentifier)
         //네트워크 상에서 고유성이 보장되는 id를 만들기 위한 표준 규약.
+    }
+
+    public void verified() {
+        this.isValid = true;
+        this.joinedAt = LocalDateTime.now();
     }
 
     @Embeddable

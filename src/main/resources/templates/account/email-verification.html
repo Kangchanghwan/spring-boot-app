@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/common :: layout(~{::title},~{::div},~{::script})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>email-verification</title>
+</head>
+<body>
+<div class="container">
+    <div class="px-4 py-5 my-5 text-center" th:if="${error} == null">
+        <img class="d-block mx-auto mb-4" src="https://getbootstrap.com/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+        <h1 class="display-5 fw-bold">환영합니다. [[${nickname}]]님</h1>
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4">당신은 [[${numberOfUser}]]번째 가입자입니다!</p>
+            <p class="lead mb-5">이제부터 당신은 가입하신 이메일과 비밀번호로 로그인 하실 수 있습니다.</p>
+<!--            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">-->
+<!--                <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Primary button</button>-->
+<!--                <button type="button" class="btn btn-outline-secondary btn-lg px-4">Secondary</button>-->
+<!--            </div>-->
+        </div>
+    </div>
+
+    <div class="px-4 py-5 my-5 text-center" th:unless="${error} == null">
+        <img class="d-block mx-auto mb-4" src="https://getbootstrap.com/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+        <h1 class="display-5 fw-bold">이메일 확인</h1>
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4">이메일 확인 링크가 정확하지 않습니다.</p>
+<!--            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">-->
+<!--                <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Primary button</button>-->
+<!--                <button type="button" class="btn btn-outline-secondary btn-lg px-4">Secondary</button>-->
+<!--            </div>-->
+        </div>
+    </div>
+</div>
+<script>
+</script>
+</body>
+</html>

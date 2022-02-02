@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -86,7 +87,6 @@ class AccountControllerTest {
                         .param("email", "lgodl1596@naver.com")
                         .param("password", "1q2w3e4r!")
                         .with(csrf()))
-                //해
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 //모두 정상일 경우 3xx redirect 상태코드를 발생시키는지 확인한다.
@@ -100,6 +100,44 @@ class AccountControllerTest {
                 .should()
                 .send(any(SimpleMailMessage.class));
         //메일을 전송했는지 확인 후 메일 타입이 SimpleMailMessage타입인지 확인한다.
+    }
+    @Test
+    @DisplayName("인증 메일 확인 : 잘못된 링크")
+    void verifyEmailWithWrongLink() throws  Exception{
+        mockMvc.perform(get("/check-email-token")
+                .param("token","1234")
+                //유효하지 않는 토큰 값을 보낸다.
+                .param("email","lgodl1598@naver.com"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                //상태값은 202여야 하나
+                .andExpect(view().name("account/email-verification"))
+                .andExpect(model().attributeExists("error"));
+                //model에 error를 키로 갖는 객체가 있어야한다.
+    }
+    @Test
+    @DisplayName("인증 메일 확인 : 유효한 링크")
+    @Transactional
+    void verifyEmail() throws  Exception{
+        Account account = Account.builder()
+                .email("email@email.com")
+                .password("1q2w3e4r!")
+                .nickname("코카곰")
+                .notificationSetting(Account.NotificationSetting.builder()
+                        .studyCreatedByWeb(true)
+                        .studyUpdatedByWeb(true)
+                        .studyRegistrationResultByEmailByWeb(true)
+                        .build())
+                .build();
+        Account newAccount = accountRepository.save(account);
+        newAccount.generateToken();
+        mockMvc.perform(get("/check-email-token")
+                .param("token",newAccount.getEmailToken())
+                .param("email",newAccount.getEmail()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/email-verification"))
+                .andExpect(model().attributeExists("numberOfUser","nickname"))
+                .andExpect(model().attributeDoesNotExist("error"));
     }
 
 }
