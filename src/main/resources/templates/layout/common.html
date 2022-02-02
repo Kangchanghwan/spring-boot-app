@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html th:fragment="layout (title, content,script)"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title th:replace="${title}">레이아웃 타이틀</title>
+    <!--부트스트랩 설정-->
+   <link href="https://getbootstrap.com/docs/5.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <style>
+        .container {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<!--header-->
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/" th:href="@{/}">
+            <img src="https://getbootstrap.com/docs/5.1/assets/img/favicons/favicon.ico" width="30" height="30"
+                 alt="webluxible" style="margin-left: 10px">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04"
+                aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExample04">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <form th:action="@{/search/study}" class="form-inline" method="get">
+                        <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="스터디 찾기"
+                               aria-label="Search"/>
+                    </form>
+                </li>
+            </ul>
+            <ul class="navbar-nav justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/login}">로그인</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/sign-up}">가입</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div th:replace="${content}">
+    <p>레이아웃 컨텐츠</p>
+</div>
+
+<footer>
+    <div class="row justify-content-center">
+        <small class="d-flex mb-3 text-muted" style="justify-content: center">Webluxible &copy; 2021</small>
+    </div>
+</footer>
+<!--JS function 을 사용하게 해주는 스트립트-->
+<script src="https://getbootstrap.com/docs/5.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script th:replace="${script}">
+</script>
+</body>
+</html>
