@@ -1,6 +1,6 @@
 #FileLock
-#Thu Feb 03 14:39:06 KST 2022
-server=172.30.1.10\:54474
-hostName=172.30.1.10
+#Thu Feb 03 17:41:49 KST 2022
+server=192.168.130.16\:52804
+hostName=192.168.130.16
 method=file
-id=17ebe17eed649c2096b0d218cc9978c07ae0a9e10b9
+id=17ebebf357e4d49eee46b689c7b9ad7b3ea36a3dc5f

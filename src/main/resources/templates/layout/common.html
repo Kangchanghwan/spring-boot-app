@@ -11,6 +11,7 @@
     <!--부트스트랩 설정-->
     <link href="https://getbootstrap.com/docs/5.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css"/> <!--font-awesome 추가-->
     <style>
         .container {
             max-width: 100%;
@@ -50,22 +51,24 @@
                     <a class="nav-link" th:href="@{/sign-up}">가입</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()"> <!--(2)-->
-                    <a class="nav-link" th:href="@{/notifications}">알림</a>
+                    <a class="nav-link" th:href="@{/notifications}">
+                        <i class="fa fa-bell-o" aria-hidden="true"></i> <!--"알림" 문자열을 종 모양 아이콘으로 수정-->
+                    </a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()"> <!--(2)-->
-                    <a class="nav-link btn btn-outline-primary" th:href="@{/notifications}">스터디 개설</a>
+                    <a class="nav-link btn btn-outline-primary" th:href="@{/notifications}">
+                        <i class="fa fa-plus" aria-hidden="true"></i> 스터디 개설 <!--"스터디 개설" 문자열 앞에 플러스 아이콘 추가-->
+                    </a>
                 </li>
                 <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        프로필</a>
+                       aria-expanded="false">프로필
+                    </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown03">
                         <li>
-                            <a class="dropdown-item" href="#">
                                 <h6 class="dropdown-header">
-                                <span sec:authentication="name">Username</span> <!--(2)-->
+                                    <span sec:authentication="name">Username</span> <!--(2)-->
                                 </h6>
-                            </a>
                         </li>
                         <li>
                             <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">프로필</a>
@@ -101,7 +104,7 @@
 <script src="https://getbootstrap.com/docs/5.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
 <script th:replace="${script}">
 </script>
 </body>

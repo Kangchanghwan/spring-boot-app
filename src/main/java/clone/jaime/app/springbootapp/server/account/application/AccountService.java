@@ -1,6 +1,7 @@
 package clone.jaime.app.springbootapp.server.account.application;
 
 
+import clone.jaime.app.springbootapp.server.account.domain.UserAccount;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.SignUpForm;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
@@ -99,7 +100,7 @@ public class AccountService {
      * @param account
      */
     public void login(Account account){
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(account.getNickname()
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(new UserAccount(account)
         ,account.getPassword(), Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
         //singleTon은 List에 단 하나의 객체만 저징하기 위함임. 제네릭같은 기능인거같음.
         SecurityContextHolder.getContext().setAuthentication(token);
