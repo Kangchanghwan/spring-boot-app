@@ -22,7 +22,7 @@
         <form class="needs-validation col-sm-6" action="#" th:action="@{/login}" method="post" novalidate>
             <div class="form-group">
                 <label for="username">이메일 또는 닉네임</label>
-                <input id="username" type="text" name="username" class="form-control" placeholder="your@email.com"
+                <input id="username" type="text" name="id" class="form-control" placeholder="your@email.com"
                        aria-describedby="emailHelp" required>
                 <small id="emailHelp" class="form-text text-muted">
                     가입할 때 사용한 이메일 또는 닉네임을 입력하세요.
@@ -31,12 +31,16 @@
             </div>
             <div class="form-group">
                 <label for="password">패스워드</label>
-                <input id="password" type="password" name="password" class="form-control"
+                <input id="password" type="password" name="pw" class="form-control"
                        aria-describedby="passwordHelp" required>
                 <small id="passwordHelp" class="form-text text-muted">
                     패스워드가 기억나지 않으시나요? <a href="#" th:href="@{/email-login}">이메일로 로그인하기</a>
                 </small>
                 <small class="invalid-feedback">패스워드를 입력하세요.</small>
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="rememberMe" name="remember-me" checked>
+                <label class="form-check-label" for="rememberMe" aria-describedby="rememberMeHelp">로그인 유지</label>
             </div>
             <div class="form-group">
                 <button class="btn btn-success btn-block" type="submit" aria-describedby="submitHelp">로그인</button>

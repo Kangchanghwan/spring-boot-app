@@ -1,5 +1,6 @@
 package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 
+import clone.jaime.app.springbootapp.server.account.application.AccountService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
+@Transactional
 @AutoConfigureMockMvc
 class AccountControllerTest {
     @Autowired
@@ -38,7 +40,8 @@ class AccountControllerTest {
     //메일을 전송했는지 확인한다.
     //실제로 전송야부를 확인하긴 어렵기 때문에 mockBean을 이용하여 주입한다.
     //mailSender가 send라는 메서드를 호출하고 그때 전달된 타입이 Simplemassage 타입인지 확인한다.
-
+    @Autowired
+    AccountService accountService;
     /**
      * 회원 가입시 이상한 값이 입력된 경우
      * 다시 회원 가입 화면으로 리다이렉트 하는지 확인
@@ -152,5 +155,6 @@ class AccountControllerTest {
                 .andExpect(authenticated().withUsername("코카곰"));
                 // 유효한 링크일 경우 인증 정보 확인.
     }
+
 
 }

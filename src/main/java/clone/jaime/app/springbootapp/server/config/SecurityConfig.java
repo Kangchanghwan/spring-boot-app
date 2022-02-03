@@ -1,5 +1,7 @@
 package clone.jaime.app.springbootapp.server.config;
 
+import clone.jaime.app.springbootapp.server.account.application.AccountService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,10 +12,20 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final AccountService accountService;
+    //userDetailsService 에 설정하기 위해 주입
+    private final DataSource dataSource;
+    //토큰 저장소를 설정하기 위해 주입한다.
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -24,12 +36,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
         http.formLogin()
                 .loginPage("/login")
+                .usernameParameter("id")
+                .passwordParameter("pw")
                 .permitAll();
         //formLogin을 설정하면 form기반 인증을 지원합니다.
         //2번의 loginpage를 설정하지 않으면 스프링이 기본으로 로그인페이지를 생성해 준다.
         http.logout()
                 .logoutSuccessUrl("/");
         //로그아웃시 설정 지원
+        http.rememberMe()
+                .userDetailsService(accountService)
+                .tokenRepository(tokenRepository());
         /**
          * 루트 페이지 /, 로그인 페이지, 회원 가입 페이지,
          * 이메일 체크하는 페이지 등 인증이 없어도 접근할 수 있는 url을 모두 등록했습니다.
@@ -39,15 +56,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          */
     }
 
+    @Bean
+    //토큰 관리를 위한 Repository 구현체를 추가하는데 직접 구현할 필요가 없고,
+    //dataSource만 설정해 주면 된다.
+    public PersistentTokenRepository tokenRepository() {
+        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+        jdbcTokenRepository.setDataSource(dataSource);
+        return jdbcTokenRepository;
+    }
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                 .antMatchers("/h2-console/**");
     }
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-    //패스워드를 인코딩 해주는 메서드를 다른 곳에서도 사용할 수 있게 빈으로 등록해준다.
+
 }
