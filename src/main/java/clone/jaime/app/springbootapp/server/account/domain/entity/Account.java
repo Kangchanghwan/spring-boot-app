@@ -32,6 +32,7 @@ public class Account extends AuditingEntity{
     private String password;
     private LocalDateTime joinedAt;
     private Boolean isValid;
+    private LocalDateTime emailTokenGeneratedAt;
 
     private String emailToken;
 
@@ -45,11 +46,18 @@ public class Account extends AuditingEntity{
         this.emailToken = UUID.randomUUID().toString();
         //UUID(Universally Unique IDentifier)
         //네트워크 상에서 고유성이 보장되는 id를 만들기 위한 표준 규약.
+        this.emailTokenGeneratedAt = LocalDateTime.now();
+        //메일을 보낼때 같이 시간을 지정.
     }
 
     public void verified() {
         this.isValid = true;
         this.joinedAt = LocalDateTime.now();
+    }
+
+    public boolean enableToSendEmail() {
+        return this.emailTokenGeneratedAt.isBefore(LocalDateTime.now().minusMinutes(5));
+        //5분이 지났는지 체크한다.
     }
 
     @Embeddable

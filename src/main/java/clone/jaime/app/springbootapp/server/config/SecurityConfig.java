@@ -19,9 +19,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers("/","/login","/sign-up"
-                ,"/check-email","/check-email-token","login-link").permitAll()
+                ,"/check-email-token","/check-email-login","/email-login","login-link").permitAll()
                 .mvcMatchers(HttpMethod.GET,"/profile/*").permitAll()
                 .anyRequest().authenticated();
+        http.formLogin()
+                .loginPage("/login")
+                .permitAll();
+        //formLogin을 설정하면 form기반 인증을 지원합니다.
+        //2번의 loginpage를 설정하지 않으면 스프링이 기본으로 로그인페이지를 생성해 준다.
+        http.logout()
+                .logoutSuccessUrl("/");
+        //로그아웃시 설정 지원
         /**
          * 루트 페이지 /, 로그인 페이지, 회원 가입 페이지,
          * 이메일 체크하는 페이지 등 인증이 없어도 접근할 수 있는 url을 모두 등록했습니다.

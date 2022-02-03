@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/common :: layout(~{::title},~{::div},~{::script})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>이메일 확인</title>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center" th:if="${error != null}">
+        <p class="lead">가입</p>
+        <div  class="alert alert-danger" role="alert" th:text="${error}"></div>
+        <p class="lead" th:text="${email}">your@email.com</p>
+    </div>
+
+    <div class="py-5 text-center" th:if="${error == null}">
+        <p class="lead">가입</p>
+
+        <h2>서비스를 사용하려면 인증 이메일을 확인하세요.</h2>
+
+        <div>
+            <p class="lead" th:text="${email}">your@email.com</p>
+            <a class="btn btn-outline-info" th:href="@{/resend-email}">인증 이메일 다시 보내기</a>
+        </div>
+    </div>
+<script>
+</script>
+</body>
+</html>

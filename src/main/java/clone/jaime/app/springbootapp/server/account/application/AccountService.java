@@ -11,16 +11,20 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class AccountService {
+public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
     //계정 정보를 저장하기 위해 repository를 주입
@@ -58,6 +62,7 @@ public class AccountService {
         Account account = Account.builder() // Entity 생성한다.
                 .email(signUpForm.getEmail())
                 .nickname(signUpForm.getNickname())
+                .isValid(false)
                 .password(passwordEncoder.encode(signUpForm.getPassword()))
                 //password의 경우 암호화가 필요하나 일단 평문으로 작성한다.
                 .notificationSetting(Account.NotificationSetting.builder()
@@ -89,7 +94,7 @@ public class AccountService {
     }
 
     /**
-     * 로그인을 담당하는 메소드다.
+     * 회원가입시 자동 로그인을 담당하는 메소드다.
      * 우선 SecurityContextHolder.getContext()로 SecurityContext를 얻는다.
      * securityContextHolder : 인증정보를 관리하는 클래스이다.
      * 인증정보를 관리하는 Holder에서 context를 얻고 setAuthentication으로  인증정보를 넣어줄 수 있다.
@@ -97,6 +102,11 @@ public class AccountService {
      * UsernamePasswordAuthenticationToken 로 토큰을 생성한다.
      * 생성시, nickname , password , Role 을 전달하는데,
      * Role은 인가 개념으로 권한 관련한 설정이다.
+     *
+     * 추가,
+     * 인증정보를 더 전달하기 위해
+     * nickname부분을 account 객체로 변경하였다.
+     *
      * @param account
      */
     public void login(Account account){
@@ -106,4 +116,22 @@ public class AccountService {
         SecurityContextHolder.getContext().setAuthentication(token);
     }
 
+    /**
+     *
+     * 로그인 페이지 에서 로그인을 담당하는 메서드다
+     * security 내부 로직에 의해 데이터베이스에서 ysername(email)을찾고
+     * 비밀번호 매칭을 통해 로그인하는 로직이다.
+     * @param username
+     * @return
+     * @throws UsernameNotFoundException
+     */
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Account account = Optional.ofNullable(accountRepository.findByEmail(username))
+                .orElse(accountRepository.findByNickname(username));
+        if(account == null){
+            throw  new UsernameNotFoundException(username);
+        }
+        return new UserAccount(account);
+    }
 }

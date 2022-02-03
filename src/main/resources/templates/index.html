@@ -7,9 +7,8 @@
 </head>
 <body>
 <div class="container">
-    <div class="px-4 py-5 my-5 text-center">
-        <img class="d-block mx-auto mb-4" src="https://getbootstrap.com/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
-        <h1 class="display-5 fw-bold">환영합니다</h1>
+    <div class="alert alert-warning" role="alert" th:if="${account != null && !account.isValid}">
+        가입을 완료하려면 <a href="#" th:href="@{/check-email}" class="alert-link">계정 인증 이메일을 확인</a>하세요.
     </div>
 </div>
 <script>

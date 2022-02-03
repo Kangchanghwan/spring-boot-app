@@ -2,6 +2,7 @@ package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 
 import clone.jaime.app.springbootapp.server.account.application.AccountService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
+import clone.jaime.app.springbootapp.server.account.domain.entity.support.CurrentUser;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.validator.SignUpFormValidator;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class AccountController {
     }
 
     @PostMapping("/sign-up")
-    public String signUpSubmit(
+    public String signUpSubmit(Model model,
             @Valid @ModelAttribute SignUpForm signUpForm,
             Errors errors) {
         if (errors.hasErrors()) {
@@ -49,6 +50,7 @@ public class AccountController {
         }
         Account account = accountService.signup(signUpForm);
         accountService.login(account);
+
         //회원 가입시 자동로그인이 되게 한다.
         return "redirect:/";
     }
@@ -75,6 +77,24 @@ public class AccountController {
         model.addAttribute("nickname",account.getNickname());
         //인증에 성공할 시 보여줄 정보를 model에 담아 보낸다.
         return "account/email-verification";
+    }
+    @GetMapping("/check-email")
+    public String checkMail(@CurrentUser Account account, Model model){
+        model.addAttribute("email",account.getEmail());
+        //model에 email을 넣어준더.,
+        return "account/check-email";
+    }
+    @GetMapping("/resend-email")
+    public String resendEmail(@CurrentUser Account account, Model model){
+        if(account.enableToSendEmail()){
+            //이메일 재전송할 때 호출되는 부분으로 새로고침이나 악용하지 못하도록 5분에
+            //한 번만 메일을 보낼 수 있도록 방어 로직을 만든다.
+            model.addAttribute("error","인증 이메일 5분에 한 번만 전송할 수 있습니다.");
+            model.addAttribute("email",account.getEmail());
+            return "account/check-email";
+        }
+        accountService.saveVerificationEmail(account);
+        return "redirect:/";
     }
 
 
