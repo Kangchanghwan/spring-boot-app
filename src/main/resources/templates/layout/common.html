@@ -33,6 +33,15 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarsExample04">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <form th:action="@{/search/study}" class="form-inline" method="get">
+                        <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="스터디 찾기"
+                               aria-label="Search"/>
+                    </form>
+                </li>
+            </ul>
+
             <ul class="navbar-nav justify-content-end">
                 <li class="nav-item" sec:authorize="!isAuthenticated()"> <!--(2)-->
                     <a class="nav-link" th:href="@{/login}">로그인</a>

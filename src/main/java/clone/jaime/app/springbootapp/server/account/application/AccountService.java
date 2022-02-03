@@ -7,9 +7,14 @@ import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepo
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +28,12 @@ public class AccountService {
     // 로컬에서 로그로만 확인하기위해 직접 구현해 주입할 수 있도록 바로 아래 설정할 예정합니다.
     private final PasswordEncoder passwordEncoder;
     //비밀번호를 변경해주는 클래스를 주입 한다.
+
+    /**
+     * 이메일 인증을 위해 이메일로 토큰링크를 보내주는 기능이다.
+     * @param newAccount
+     */
+
     public void saveVerificationEmail(Account newAccount) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         //이메일 객체를 생성하고 이메일의 내용을 채운다.
@@ -36,6 +47,12 @@ public class AccountService {
         //센더를 통해 메일을 보낸다.
     }
 
+    /**
+     * param으로 받은 form데이터를 account 객체에 빌드하여
+     * save하는 기능이다.
+     * @param signUpForm
+     * @return
+     */
     public Account saveNewAccount(SignUpForm signUpForm) {
         Account account = Account.builder() // Entity 생성한다.
                 .email(signUpForm.getEmail())
@@ -51,15 +68,41 @@ public class AccountService {
         Account newAccount = accountRepository.save(account);
         return newAccount;
     }
-    public void signup(SignUpForm signUpForm) {
+
+    /**
+     * 위 두개 매서드를 이용하여 가입과 인증을 동시 처리하는 가입메소드다.
+     * @param signUpForm
+     * @return
+     */
+    public Account signup(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
         newAccount.generateToken();
         //이메일 인증용 토큰을 생성한다.
         saveVerificationEmail(newAccount);
+        return newAccount;
     }
     @Transactional(readOnly = true)
     public Account findAccountByEmail(String email) {
         return accountRepository.findByEmail(email);
         //이메일로 계정을 찾아 반환
     }
+
+    /**
+     * 로그인을 담당하는 메소드다.
+     * 우선 SecurityContextHolder.getContext()로 SecurityContext를 얻는다.
+     * securityContextHolder : 인증정보를 관리하는 클래스이다.
+     * 인증정보를 관리하는 Holder에서 context를 얻고 setAuthentication으로  인증정보를 넣어줄 수 있다.
+     *
+     * UsernamePasswordAuthenticationToken 로 토큰을 생성한다.
+     * 생성시, nickname , password , Role 을 전달하는데,
+     * Role은 인가 개념으로 권한 관련한 설정이다.
+     * @param account
+     */
+    public void login(Account account){
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(account.getNickname()
+        ,account.getPassword(), Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
+        //singleTon은 List에 단 하나의 객체만 저징하기 위함임. 제네릭같은 기능인거같음.
+        SecurityContextHolder.getContext().setAuthentication(token);
+    }
+
 }

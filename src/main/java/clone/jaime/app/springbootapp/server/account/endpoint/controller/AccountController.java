@@ -47,7 +47,9 @@ public class AccountController {
         if (errors.hasErrors()) {
             return "account/sign-up";
         }
-        accountService.signup(signUpForm);
+        Account account = accountService.signup(signUpForm);
+        accountService.login(account);
+        //회원 가입시 자동로그인이 되게 한다.
         return "redirect:/";
     }
     @GetMapping("/check-email-token")
@@ -68,6 +70,7 @@ public class AccountController {
         //가입된 사용자이나 발급한 토큰과 맞지 않는다면 오류를 발생시킨다.
         account.verified();
         //인증 완료된 계정의 인증정보를 완료로 바꾼다.
+        accountService.login(account);
         model.addAttribute("numberOfUser",accountRepository.count());
         model.addAttribute("nickname",account.getNickname());
         //인증에 성공할 시 보여줄 정보를 model에 담아 보낸다.
