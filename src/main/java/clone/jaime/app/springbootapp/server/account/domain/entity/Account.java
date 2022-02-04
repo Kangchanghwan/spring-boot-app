@@ -3,10 +3,12 @@ package clone.jaime.app.springbootapp.server.account.domain.entity;
 
 import clone.jaime.app.springbootapp.server.account.domain.entity.support.ListStringConverter;
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -91,6 +93,25 @@ public class Account extends AuditingEntity{
         private Boolean studyUpdatedByWeb;
 
     }
+    //equals는 기본적으로 인스턴스가 동일한 경우만 true를 반환한다.
+    //JPA의 경우 1차캐시에서 생성한 엔티티와는 동일하나,
+    // 초기화 후 다시 동일한 엔티티를 읽은 경우 다른 객체가 반환된다.
+    // 이런경우에 기본키 ID값 비교를 통해 Equals를 재정의 해야한다.
 
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj){
+            return true;
+        }
+        if(obj == null || Hibernate.getClass(this) != Hibernate.getClass(obj)){
+            return false;
+        }
+        Account account = (Account) obj;
+        return id != null && Objects.equals(id,account.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return this.getClass().hashCode();
+    }
 }

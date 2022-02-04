@@ -6,18 +6,17 @@ import clone.jaime.app.springbootapp.server.account.domain.entity.support.Curren
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.validator.SignUpFormValidator;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class AccountController {
@@ -55,7 +54,6 @@ public class AccountController {
         return "redirect:/";
     }
     @GetMapping("/check-email-token")
-    @Transactional
     public String verifyEmail(String token,String email, Model model){
         //이메일 링크를 클릭하면 접속하게 되는 컨트롤러이다.
         Account account = accountService.findAccountByEmail(email);
@@ -70,9 +68,8 @@ public class AccountController {
             return "account/email-verification";
         }
         //가입된 사용자이나 발급한 토큰과 맞지 않는다면 오류를 발생시킨다.
-        account.verified();
+        accountService.verified(account);
         //인증 완료된 계정의 인증정보를 완료로 바꾼다.
-        accountService.login(account);
         model.addAttribute("numberOfUser",accountRepository.count());
         model.addAttribute("nickname",account.getNickname());
         //인증에 성공할 시 보여줄 정보를 model에 담아 보낸다.
@@ -96,7 +93,24 @@ public class AccountController {
         accountService.saveVerificationEmail(account);
         return "redirect:/";
     }
-
+    @GetMapping("/profile/{nickname}")
+    public String viewProfile(@PathVariable String nickname,
+                              Model model,
+                              @CurrentUser Account account){
+        Account byNickname = accountRepository.findByNickname(nickname);
+        //파라미터로 가져온 닉네임으로 account를 찾는다.
+        if(byNickname == null){
+            //만일 없다면
+            throw new IllegalArgumentException(nickname+"에 해당하는 사용자가 없습니다.");
+            //오류발생
+        }
+        log.info("byNickname = {}",byNickname);
+        model.addAttribute(byNickname);
+        //있다면 객체를 모델에 담아 보낸다.
+        model.addAttribute("isOwner",byNickname.equals(account));
+        //해당 프로필이 내 프로필인지 아닌지 확인한 값을 모델객체에 같이 담아 보낸다.
+        return "account/profile";
+    }
 
 
 }

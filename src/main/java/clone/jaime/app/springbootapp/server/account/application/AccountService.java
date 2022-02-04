@@ -134,4 +134,9 @@ public class AccountService implements UserDetailsService {
         }
         return new UserAccount(account);
     }
+
+    public void verified(Account account) {
+        account.verified();
+        login(account);
+    }
 }
