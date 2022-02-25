@@ -66,9 +66,9 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown03">
                         <li>
-                                <h6 class="dropdown-header">
-                                    <span sec:authentication="name">Username</span> <!--(2)-->
-                                </h6>
+                            <h6 class="dropdown-header">
+                                <span sec:authentication="name">Username</span> <!--(2)-->
+                            </h6>
                         </li>
                         <li>
                             <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">프로필</a>
@@ -94,6 +94,8 @@
 <div th:replace="${content}">
     <p>레이아웃 컨텐츠</p>
 </div>
+
+
 
 <footer>
     <div class="row justify-content-center">

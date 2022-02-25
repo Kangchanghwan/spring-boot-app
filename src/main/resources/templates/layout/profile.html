@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/common :: layout(~{::title},~{::div},~{::script})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>email-verification</title>
+</head>
+<body>
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="row mt-3 justify-content-center">
+            <div class="col-2">
+                <div th:fragment="settings-menu (currentMenu)" class="list-group">
+                    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'profile'} ? active" href="#" th:href="@{/settings/profile}">프로필</a>
+                    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'password'} ? active" href="#" th:href="@{/settings/password}">패스워드</a>
+                    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'notification'} ? active" href="#" th:href="@{/settings/notification}">알림 설정</a>
+                    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'tags'} ? active" href="#" th:href="@{/settings/tags}">관심 주제</a>
+                    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'zones'} ? active" href="#" th:href="@{/settings/zones}">활동 지역</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+</script>
+</body>
+</html>

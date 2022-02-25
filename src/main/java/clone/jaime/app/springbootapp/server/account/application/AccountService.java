@@ -3,6 +3,7 @@ package clone.jaime.app.springbootapp.server.account.application;
 
 import clone.jaime.app.springbootapp.server.account.domain.UserAccount;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.Profile;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.SignUpForm;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -138,5 +139,10 @@ public class AccountService implements UserDetailsService {
     public void verified(Account account) {
         account.verified();
         login(account);
+    }
+
+    public void updateProfile(Account account, Profile profile) {
+        account.updateProfile(profile);
+        accountRepository.save(account);
     }
 }

@@ -2,6 +2,7 @@ package clone.jaime.app.springbootapp.server.account.domain.entity;
 
 
 import clone.jaime.app.springbootapp.server.account.domain.entity.support.ListStringConverter;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.Profile;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -62,6 +63,29 @@ public class Account extends AuditingEntity{
         //5분이 지났는지 체크한다.
     }
 
+
+    @PostLoad
+    // @Embedded 를 사용했을 떄 자동으로 초기화 되지 않아 템프릿 로드시 에러가 발생하여 , Entity로드 이후 null일 경우 자동 객체 생성
+    private void init(){
+        if(profile==null){
+            profile = new Profile();
+        }
+        if(notificationSetting == null){
+            notificationSetting = new NotificationSetting();
+        }
+    }
+
+    public void updateProfile(clone.jaime.app.springbootapp.server.account.endpoint.controller.Profile profile) {
+        if(this.profile == null){
+            this.profile = new Profile();
+        }
+
+        this.profile.bio = profile.getBio();
+        this.profile.url = profile.getUrl();
+        this.profile.job = profile.getJob();
+        this.profile.location = profile.getLocation();
+    }
+
     @Embeddable
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -69,9 +93,7 @@ public class Account extends AuditingEntity{
     @ToString
     public static class Profile {
         private String bio;
-        @Convert(converter = ListStringConverter.class)
-        private List<String> url;
-        //list를 DB컬럼하나에 매핑하기위해 converter를 사용하였습니다.
+        private String url;
         private String job;
         private String location;
         private String company;
