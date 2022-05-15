@@ -3,6 +3,7 @@ package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -24,5 +25,8 @@ public class SignUpForm {
     @NotBlank
     @Length(min = 8, max = 50)
     private String password;
+    @NotBlank
+    //휴대폰 번호 정규식
+    private String phone;
 
 }

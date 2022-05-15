@@ -9,7 +9,6 @@
 <body class="bg-light">
 
 
-
 <!--content-->
 
 <div class="container">
@@ -25,6 +24,37 @@
                        placeholder="ex) jaime" aria-describedby="nicknameHelp" required minlength="3" maxlength="20">
                 <small id="nicknameHelp" class="form-text text-muted">
                     공백없이 문자와 숫자로만 3자 이상 20자 이내로 입력하세요. 가입후에 변경할 수 있습니다.
+                </small>
+                <small class="invalid-feedback">닉네임을 입력하세요.</small>
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname
+                    Error</small>
+            </div>
+            <div class="form-group">
+                <label for="phone">휴대폰 번호</label>
+                <div class="input-group mb-3">
+                    <input id="phone" type="text" th:field="*{phone}" class="form-control"
+                           placeholder="ex)010-1234-1234" aria-describedby="phoneHelp" required minlength="3"
+                           maxlength="20">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="smsCheck()">Button</button>
+                </div>
+                <small id="phoneHelp" class="form-text text-muted">
+                    '-' 포함하여 휴대폰 번호를 입력해 주세요.
+                </small>
+                <small class="invalid-feedback">닉네임을 입력하세요.</small>
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname
+                    Error</small>
+            </div>
+
+            <div class="form-group">
+                <label for="check">인증번호</label>
+                <div class="input-group mb-3">
+                    <input id="check" type="text" th:field="*{phone}" class="form-control"
+                           placeholder="인증번호를 입력해 주세요" aria-describedby="phoneHelp" required minlength="3"
+                           maxlength="20">
+                    <button class="btn btn-outline-secondary" type="button" id="button-smsCheck" onclick="checkNumber()">Button</button>
+                </div>
+                <small id="checkText" class="form-text text-muted">
+                    인증번호를 입려하세요.
                 </small>
                 <small class="invalid-feedback">닉네임을 입력하세요.</small>
                 <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname
@@ -71,6 +101,7 @@
 
 
 <script type="application/javascript">
+    let checkNum = '';
     (function () {
         'use strict';
 
@@ -90,6 +121,33 @@
             })
         }, false)
     }())
+
+
+    const smsCheck = () => {
+        const phone = document.getElementById('phone').value;
+        console.log(phone)
+        fetch("http://localhost:8080/sign-up/sendSMS",{
+            method:'post',
+            headers : {
+                "Content-Type": "application/json",
+            },
+            body : JSON.stringify({phone})
+        }).then((resp) => resp.json())
+        .then(res => {
+            checkNum = res;
+            console.log(res)
+
+        })
+    }
+
+    const checkNumber = () =>{
+        const inputNum = document.getElementById('check').value;
+        console.log(`inputNum${typeof inputNum}. ${typeof checkNum}`);
+        if(JSON.stringify(checkNum) === JSON.stringify(inputNum)){
+            console.log('인증되었습니다.');
+        }else{
+            console.log('인증에 실패 했습니다.')}
+    }
 </script>
 </body>
 </html>

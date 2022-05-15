@@ -7,14 +7,15 @@ import clone.jaime.app.springbootapp.server.account.endpoint.controller.validato
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Random;
 
 @Slf4j
 @Controller
@@ -31,6 +32,25 @@ public class AccountController {
     }
   //validator 사용 방법은 위 방법도 가능하다.
 
+
+
+
+    @PostMapping("/sign-up/sendSMS")
+    public @ResponseBody String sendSMS(@RequestBody SignUpForm phone) {
+        System.out.println("phone = " + phone.getPhone());
+
+        Random rand  = new Random();
+        String numStr = "";
+        for(int i=0; i<4; i++) {
+            String ran = Integer.toString(rand.nextInt(10));
+            numStr+=ran;
+        }
+
+        System.out.println("수신자 번호 : " + phone);
+        System.out.println("인증번호 : " + numStr);
+       // accountService.certifiedPhoneNumber(phone.getPhone(),numStr);
+        return numStr;
+    }
 
     @GetMapping("/sign-up")
     public String signForm(Model model) {

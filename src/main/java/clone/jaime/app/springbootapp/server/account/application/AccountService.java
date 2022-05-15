@@ -7,6 +7,9 @@ import clone.jaime.app.springbootapp.server.account.endpoint.controller.Profile;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.SignUpForm;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
+import net.nurigo.java_sdk.api.Message;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import org.json.simple.JSONObject;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Optional;
 
 @Service
@@ -144,5 +148,28 @@ public class AccountService implements UserDetailsService {
     public void updateProfile(Account account, Profile profile) {
         account.updateProfile(profile);
         accountRepository.save(account);
+    }
+
+    public void certifiedPhoneNumber(String phone, String numStr) {
+
+        String api_key = "NCSIAHSMU6KDBN8E";
+        String api_secret = "DPOSA19MTFMBHPQB2GNA7UNCP4CVYVBG";
+        Message coolsms = new Message(api_key, api_secret);
+
+        // 4 params(to, from, type, text) are mandatory. must be filled
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("to", phone);    // 수신전화번호
+        params.put("from", "01027242549");    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
+        params.put("type", "SMS");
+        params.put("text", "핫띵크 휴대폰인증 테스트 메시지 : 인증번호는" + "["+numStr+"]" + "입니다.");
+        params.put("app_version", "test app 1.2"); // application name and version
+
+        try {
+            JSONObject obj = (JSONObject) coolsms.send(params);
+            System.out.println(obj.toString());
+        } catch (CoolsmsException e) {
+            System.out.println(e.getMessage());
+            System.out.println(e.getCode());
+        }
     }
 }

@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .mvcMatchers("/","/login","/sign-up"
+                .mvcMatchers("/","/login","/sign-up","/sign-up/*"
                 ,"/check-email-token","/check-email-login","/email-login","login-link").permitAll()
                 .mvcMatchers(HttpMethod.GET,"/profile/*").permitAll()
                 .anyRequest().authenticated();
@@ -54,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          * profile의 경우 다른 사람의 것도 조회할 수 있어야 하므로
          * GET 메서드를 사용하고 /profile로 시작하는 모든 url 또한 인증 없이 접근할 수 있게 하였습니다.
          */
+        http.csrf().disable();
     }
 
     @Bean

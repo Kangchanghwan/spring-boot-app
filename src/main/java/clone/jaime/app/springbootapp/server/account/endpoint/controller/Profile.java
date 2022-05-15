@@ -18,8 +18,9 @@ public class Profile {
     private String url;
     @Length(max=50)
     private String job;
-    @Length(max = 60)
+    @Length(max = 50)
     private String location;
+    private String image;
 
     public static Profile from(Account account){
         return new Profile(account);
@@ -30,5 +31,6 @@ public class Profile {
         this.url = Optional.ofNullable(account.getProfile()).map(Account.Profile::getUrl).orElse(null);
         this.job = Optional.ofNullable(account.getProfile()).map(Account.Profile::getJob).orElse(null);
         this.location = Optional.ofNullable(account.getProfile()).map(Account.Profile::getLocation).orElse(null);
+        this.image = Optional.of(account.getProfile()).map(Account.Profile::getImage).orElse(null);
     }
 }
