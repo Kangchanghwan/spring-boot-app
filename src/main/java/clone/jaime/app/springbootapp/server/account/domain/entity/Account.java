@@ -87,6 +87,10 @@ public class Account extends AuditingEntity{
         this.profile.image = profile.getImage();
     }
 
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
+
     @Embeddable
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)

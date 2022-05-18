@@ -172,4 +172,9 @@ public class AccountService implements UserDetailsService {
             System.out.println(e.getCode());
         }
     }
+
+    public void updatePassword(Account account, String newPassword) {
+        account.updatePassword(passwordEncoder.encode((newPassword)));
+        accountRepository.save(account);
+    }
 }

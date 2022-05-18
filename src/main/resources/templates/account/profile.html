@@ -12,8 +12,9 @@
             <!-- avatar -->
             <svg th:if="${#strings.isEmpty(account.profile.image)}" class="img-fluid float-left rounded img-thumbnail"
                  th:data-jdenticon-value="${account.nickname}" width="125" height="125"></svg>
-            <svg th:if="${!#strings.isEmpty(account.profile.image)}" class="img-fluid float-left rounded img-thumbnail"
-                 th:src="${account.profile.image}" width="125" height="125"></svg>
+            <img th:if="${!#strings.isEmpty(account.profile.image)}" class="img-fluid float-left rounded img-thumbnail"
+                 th:src="${account.profile.image}" width="125" height="125"></img>
+
         </div>
         <div class="col-8">
             <!-- nickname-->

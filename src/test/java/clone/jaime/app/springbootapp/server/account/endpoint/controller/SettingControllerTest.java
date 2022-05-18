@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,6 +32,8 @@ class SettingControllerTest {
     @MockBean
     JavaMailSender mailSender;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @AfterEach
     void afterEach(){
@@ -81,4 +84,60 @@ class SettingControllerTest {
     }
 
 
+    @Test
+    @DisplayName("패스워드 수정 폼")
+    @WithAccount("abc")
+    void updatePasswordForm() throws Exception {
+        mockMvc.perform(get(SettingController.SETTINGS_PASSWORD_URL))
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingController.SETTINGS_PASSWORD_VIEW_NAME))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("passwordForm"));
+    }
+    @Test
+    @DisplayName("패스워드 수정: 입력값 정상")
+    @WithAccount("abc")
+    void updatePassword() throws  Exception{
+        mockMvc.perform(post(SettingController.SETTINGS_PASSWORD_URL)
+                        .param("newPassword","12341234")
+                        .param("newPasswordConfirm","12341234")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(SettingController.SETTINGS_PASSWORD_URL))
+                .andExpect(flash().attributeExists("message"));
+        Account account = accountRepository.findByNickname("abc");
+        assertTrue(passwordEncoder.matches("12341234",account.getPassword()));
+
+    }
+
+    @Test
+    @DisplayName("패스워드 수정 : 입력값 에러 (길이)")
+    @WithAccount("abc")
+    void updatePasswordWithLengthError() throws Exception {
+        mockMvc.perform(post(SettingController.SETTINGS_PASSWORD_URL)
+                        .param("newPassword","1")
+                        .param("newPasswordConfirm","1")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingController.SETTINGS_PASSWORD_VIEW_NAME))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("passwordForm"))
+                .andExpect(model().attributeExists("account"));
+
+    }
+    @Test
+    @DisplayName("패스워드 수정 : 입력값 에러 (불일치)")
+    @WithAccount("abc")
+    void updatePasswordWithNotMatchError() throws Exception {
+        mockMvc.perform(post(SettingController.SETTINGS_PASSWORD_URL)
+                        .param("newPassword","12341234")
+                        .param("newPasswordConfirm","12231234")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingController.SETTINGS_PASSWORD_VIEW_NAME))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("passwordForm"))
+                .andExpect(model().attributeExists("account"));
+
+    }
 }
