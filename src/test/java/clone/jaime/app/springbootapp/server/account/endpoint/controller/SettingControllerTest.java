@@ -140,4 +140,41 @@ class SettingControllerTest {
                 .andExpect(model().attributeExists("account"));
 
     }
+
+    @Test
+    @DisplayName("알림 설정 수정 폼")
+    @WithAccount("abc")
+    void updateNotificationForm() throws Exception{
+        mockMvc.perform(get(SettingController.SETTINGS_NOTIFICATION_URL))
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingController.SETTINGS_NOTIFICATION_VIEW_NAME))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("notificationForm"));
+    }
+
+    @Test
+    @DisplayName("알림 설정 수정 : 입력값 정상")
+    @WithAccount("abc")
+    void updateNotification() throws Exception{
+        mockMvc.perform(post(SettingController.SETTINGS_NOTIFICATION_URL)
+                                .param("studyCreatedByEmail","true")
+                                .param("studyCreatedByWeb","true")
+                                .param("studyRegistrationResultByEmail","true")
+                                .param("studyRegistrationResultByWeb","true")
+                                .param("studyUpdatedByEmail","true")
+                                .param("studyUpdatedByWeb","true")
+                                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(SettingController.SETTINGS_NOTIFICATION_URL))
+                .andExpect(flash().attributeExists("message"));
+        Account account = accountRepository.findByNickname("abc");
+        assertTrue(account.getNotificationSetting().getStudyCreatedByEmail());
+        assertTrue(account.getNotificationSetting().getStudyCreatedByWeb());
+        assertTrue(account.getNotificationSetting().getStudyRegistrationResultByEmailByEmail());
+        assertTrue(account.getNotificationSetting().getStudyRegistrationResultByEmailByWeb());
+        assertTrue(account.getNotificationSetting().getStudyUpdatedByEmail());
+        assertTrue(account.getNotificationSetting().getStudyUpdatedByWeb());
+    }
+
+
 }

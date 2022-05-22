@@ -3,6 +3,7 @@ package clone.jaime.app.springbootapp.server.account.application;
 
 import clone.jaime.app.springbootapp.server.account.domain.UserAccount;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.NotificationForm;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.Profile;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.SignUpForm;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
@@ -74,6 +75,9 @@ public class AccountService implements UserDetailsService {
                         .studyCreatedByWeb(true)
                         .studyUpdatedByWeb(true)
                         .studyRegistrationResultByEmailByWeb(true)
+                        .studyCreatedByEmail(false)
+                        .studyUpdatedByEmail(false)
+                        .studyRegistrationResultByEmailByEmail(false)
                         .build())
                 .build();
         Account newAccount = accountRepository.save(account);
@@ -175,6 +179,11 @@ public class AccountService implements UserDetailsService {
 
     public void updatePassword(Account account, String newPassword) {
         account.updatePassword(passwordEncoder.encode((newPassword)));
+        accountRepository.save(account);
+    }
+
+    public void updateNotification(Account account, NotificationForm form){
+        account.updateNotification(form);
         accountRepository.save(account);
     }
 }

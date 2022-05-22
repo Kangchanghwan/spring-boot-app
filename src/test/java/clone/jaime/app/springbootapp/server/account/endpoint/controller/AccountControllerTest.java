@@ -94,6 +94,7 @@ class AccountControllerTest {
                         .param("nickname", "킹받네")
                         .param("email", "lgodl1596@naver.com")
                         .param("password", "1q2w3e4r!")
+                        .param("phone","01027242549")
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())

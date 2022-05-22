@@ -31,6 +31,6 @@ public class Profile {
         this.url = Optional.ofNullable(account.getProfile()).map(Account.Profile::getUrl).orElse(null);
         this.job = Optional.ofNullable(account.getProfile()).map(Account.Profile::getJob).orElse(null);
         this.location = Optional.ofNullable(account.getProfile()).map(Account.Profile::getLocation).orElse(null);
-        this.image = Optional.of(account.getProfile()).map(Account.Profile::getImage).orElse(null);
+        this.image = Optional.ofNullable(account.getProfile()).map(Account.Profile::getImage).orElse(null);
     }
 }

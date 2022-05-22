@@ -2,6 +2,7 @@ package clone.jaime.app.springbootapp.server.account.domain.entity;
 
 
 import clone.jaime.app.springbootapp.server.account.domain.entity.support.ListStringConverter;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.NotificationForm;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.Profile;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -91,6 +92,7 @@ public class Account extends AuditingEntity{
         this.password = newPassword;
     }
 
+
     @Embeddable
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -106,18 +108,28 @@ public class Account extends AuditingEntity{
         private String image;
     }
 
+    public void updateNotification(NotificationForm form) {
+        this.notificationSetting.studyCreatedByEmail = form.isStudyCreatedByEmail();
+        this.notificationSetting.studyCreatedByWeb = form.isStudyCreatedByWeb();
+        this.notificationSetting.studyRegistrationResultByEmailByEmail = form.isStudyRegistrationResultByEmail();
+        this.notificationSetting.studyRegistrationResultByEmailByWeb = form.isStudyRegistrationResultByWeb();
+        this.notificationSetting.studyUpdatedByEmail = form.isStudyUpdatedByEmail();
+        this.notificationSetting.studyUpdatedByWeb = form.isStudyUpdatedByWeb();
+    }
+
+
     @Embeddable
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     @Builder @Getter
     @ToString
     public static class NotificationSetting{
-        private Boolean studyCreatedByEmail;
-        private Boolean studyCreatedByWeb;
-        private Boolean studyRegistrationResultByEmailByEmail;
-        private Boolean studyRegistrationResultByEmailByWeb;
-        private Boolean studyUpdatedByEmail;
-        private Boolean studyUpdatedByWeb;
+        private Boolean studyCreatedByEmail = false;
+        private Boolean studyCreatedByWeb = true;
+        private Boolean studyRegistrationResultByEmailByEmail = false;
+        private Boolean studyRegistrationResultByEmailByWeb = true;
+        private Boolean studyUpdatedByEmail = false;
+        private Boolean studyUpdatedByWeb = true;
 
     }
     //equals는 기본적으로 인스턴스가 동일한 경우만 true를 반환한다.
