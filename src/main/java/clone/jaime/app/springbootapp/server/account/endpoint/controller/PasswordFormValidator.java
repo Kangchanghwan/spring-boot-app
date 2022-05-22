@@ -1,8 +1,10 @@
 package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+@Component
 public class PasswordFormValidator implements Validator {
 
 

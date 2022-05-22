@@ -186,4 +186,11 @@ public class AccountService implements UserDetailsService {
         account.updateNotification(form);
         accountRepository.save(account);
     }
+
+    public void updateNickname(Account account, String nickname) {
+        account.updateNickname(nickname);
+        accountRepository.save(account);
+        login(account);
+        //인증 정보를 업데이트 하였어도 실제 반영하기 위해서는 다시로그인 메서드를 호출해주어 인증정보를 갱신한다.
+    }
 }

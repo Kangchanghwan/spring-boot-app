@@ -175,6 +175,59 @@ class SettingControllerTest {
         assertTrue(account.getNotificationSetting().getStudyUpdatedByEmail());
         assertTrue(account.getNotificationSetting().getStudyUpdatedByWeb());
     }
+    @Test
+    @DisplayName("닉네임 수정 폼")
+    @WithAccount("abcd")
+    void updateNicknameForm() throws Exception{
+        mockMvc.perform(get(SettingController.SETTINGS_ACCOUNT_URL))
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingController.SETTINGS_ACCOUNT_VIEW_NAME))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("nicknameForm"));
+    }
 
+    @Test
+    @DisplayName("닉네임 수정: 입력값 정상")
+    @WithAccount("abcd")
+    void updateNickName() throws Exception{
+        String newNickname = "코카곰";
+        mockMvc.perform(post(SettingController.SETTINGS_ACCOUNT_URL)
+                .param("nickname",newNickname))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(SettingController.SETTINGS_ACCOUNT_URL))
+                .andExpect(flash().attributeExists("message"));
 
+        Account account = accountRepository.findByNickname(newNickname);
+        assertEquals(newNickname,account.getNickname());
+    }
+
+    @Test
+    @DisplayName("닉네임 수정: 에러(길이)")
+    @WithAccount("abcd")
+    void updateNickNameWithShortNickname() throws Exception{
+        String newNickname = "코";
+        mockMvc.perform(post(SettingController.SETTINGS_ACCOUNT_URL)
+                        .param("nickname",newNickname)
+                        .with(csrf()))
+                .andExpect(model().hasErrors())
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingController.SETTINGS_ACCOUNT_VIEW_NAME))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("nicknameForm"));
+
+    }
+    @Test
+    @DisplayName("닉네임 수정: 에러(중복)")
+    @WithAccount("abcd")
+    void updateNickNameWithDuplicatedNickname() throws Exception{
+        String newNickname = "abcd";
+        mockMvc.perform(post(SettingController.SETTINGS_ACCOUNT_URL)
+                        .param("nickname",newNickname)
+                        .with(csrf()))
+                .andExpect(model().hasErrors())
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingController.SETTINGS_ACCOUNT_VIEW_NAME))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("nicknameForm"));
+    }
 }

@@ -92,6 +92,10 @@ public class Account extends AuditingEntity{
         this.password = newPassword;
     }
 
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
 
     @Embeddable
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
