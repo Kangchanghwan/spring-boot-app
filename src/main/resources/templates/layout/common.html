@@ -8,9 +8,11 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
     <title th:replace="${title}">레이아웃 타이틀</title>
+    <script crossorigin="anonymous" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://kit.fontawesome.com/5a219dd4b7.js" crossorigin="anonymous"></script>
     <!--부트스트랩 설정-->
     <link href="/node_modules/cropper/dist/cropper.css" rel="stylesheet"/>
+    <link href="/node_modules/@yaireo/tagify/dist/tagify.css" rel="stylesheet"/>
 
     <link href="https://getbootstrap.com/docs/5.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -114,7 +116,7 @@
 <script src="https://getbootstrap.com/docs/5.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
-
+<script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
 <script th:replace="${script}">
 
 </script>

@@ -23,6 +23,11 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class SettingController {
 
+
+    static final String SETTING_TAGS_VIEW_NAME = "settings/tags";
+    static final String SETTING_TAGS_URL = "/" + SETTING_TAGS_VIEW_NAME;
+
+
     static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
     static final String SETTINGS_PROFILE_URL = "/" + SETTINGS_PROFILE_VIEW_NAME;
     // 테스트 코드에서 재사용 하기 위해 default로 접근제한자 설정을 해준다.
@@ -39,17 +44,25 @@ public class SettingController {
     private final PasswordFormValidator passwordFormValidator;
     private final NicknameFormValidator nicknameFormValidator;
 
+
     @InitBinder("passwordForm")
     public void passwordFormValidator(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(passwordFormValidator);
     }
+
     @InitBinder("nicknameForm")
-    public void nicknameFormValidator(WebDataBinder webDataBinder){
+    public void nicknameFormValidator(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(nicknameFormValidator);
     }
 
+    @GetMapping(SETTING_TAGS_URL)
+    public String updateTags(@CurrentUser Account account, Model model) {
+        model.addAttribute(account);
+        return SETTING_TAGS_VIEW_NAME;
+    }
+
     @GetMapping(SETTINGS_ACCOUNT_URL)
-    public String accountForm(@CurrentUser Account account, Model model){
+    public String accountForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute(new NicknameForm(account.getNickname()));
         return SETTINGS_ACCOUNT_VIEW_NAME;
