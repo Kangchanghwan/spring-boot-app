@@ -7,12 +7,12 @@ import clone.jaime.app.springbootapp.server.account.endpoint.controller.validato
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.Random;
@@ -26,14 +26,47 @@ public class AccountController {
     private final AccountService accountService;
     private final AccountRepository accountRepository;
 
+
+    @GetMapping("/email-login")
+    public String emailLoginForm() {
+        return "account/email-login";
+    }
+    // 뷰 페이지로 라우팅
+
+    @PostMapping("/email-login")
+    public String sendLinkForEmailLogin(String email, Model model, RedirectAttributes attributes) {
+        Account account = accountRepository.findByEmail(email);
+        if (account == null) {
+            model.addAttribute("error", "유효한 이메일 주소가 아닙니다.");
+            return "account/email-login";
+        }
+//        if(!account.enableToSendEmail()){
+//            model.addAttribute("error","너무 잦은 요청입니다. 5분 뒤에 다시 시도하세요.");
+//            return "account/email-login";
+//        }
+        accountService.sendLoginLink(account);
+        attributes.addFlashAttribute("message", "로그인 가능한 링크를 이메일로 전송하였습니다.");
+        return "redirect:/email-login";
+    }
+    // 이메일 폼을 통해 입력받은 이메일로 이메일을 발송한다. 이메일이 올바르지 않을경우 에러를 전달한다.
+
+    @GetMapping("login-by-email")
+    public String loginByEmail(String token, String email, Model model) {
+        Account account = accountRepository.findByEmail(email);
+        if (account == null || !account.isValid(token)) {
+            model.addAttribute("error", "로그인할 수 없습니다.");
+            return "account/logged-in-by-email";
+        }
+        accountService.login(account);
+        return "account/logged-in-by-email";
+    }
+    // 토큰의 유효성을 판단한다. 유효한 토큰인경우 로그인 시킨다.
+
     @InitBinder("signUpForm") // (1)
     public void initBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(signUpFormValidator);
     }
-  //validator 사용 방법은 위 방법도 가능하다.
-
-
-
+    //validator 사용 방법은 위 방법도 가능하다.
 
     @PostMapping("/sign-up/sendSMS")
     public @ResponseBody String sendSMS(@RequestBody SignUpForm phone) {
@@ -131,6 +164,5 @@ public class AccountController {
         //해당 프로필이 내 프로필인지 아닌지 확인한 값을 모델객체에 같이 담아 보낸다.
         return "account/profile";
     }
-
 
 }

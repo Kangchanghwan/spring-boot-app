@@ -9,11 +9,11 @@
 <div class="container">
     <div class="row mt-5 justify-content-center">
             <div class="col-2">
-                <div th:replace="layout/profile.html::settings-menu (currentMenu='account')"></div>
+                <div th:replace="layout/fragments.html::settings-menu (currentMenu='account')"></div>
             </div>
         <div class="col-8">
             <div th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
-                <svg th:replace="layout/profile.html::symbol-success"/>
+                <svg th:replace="layout/fragments.html::symbol-success"/>
 
                 <span th:text="${message}">완료</span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -25,7 +25,7 @@
                 <form class="needs-validation col-12 mb-3" th:object="${nicknameForm}" th:action="@{/settings/account}"
                       method="post" novalidate>
                     <div class="alert alert-warning d-flex align-items-center" role="alert">
-                        <svg th:replace="layout/profile.html::symbol-danger"/>
+                        <svg th:replace="layout/fragments.html::symbol-danger"/>
                         <div>
                             닉네임을 변경하시면 프로필 페이지 링크도 변경됩니다.
                         </div>
@@ -50,7 +50,7 @@
                 <div class="col-sm-12 mt-3">
                     <h2 class="text-danger">계정 삭제</h2>
                     <div class="alert alert-danger d-flex align-items-center" role="alert">
-                        <svg th:replace="layout/profile.html::symbol-danger"/>
+                        <svg th:replace="layout/fragments.html::symbol-danger"/>
 
                         <div>
                             이 계정은 삭제할 수 없습니다.

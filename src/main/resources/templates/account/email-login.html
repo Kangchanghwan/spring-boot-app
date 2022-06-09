@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/common :: layout(~{::title},~{::div},~{::script})}">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <p class="lead">Webluxible</p>
+        <h2>패스워드 없이 로그인하기</h2>
+    </div>
+    <div class="row justify-content-center">
+        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert" th:if="${error}">
+            <svg th:replace="layout/fragments.html::symbol-danger"/>
+            <span th:text="${error}">error</span>
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
+        </div>
+        <div class="alert alert-info alert-dismissible fade show mt-3" role="alert" th:if="${message}">
+            <svg th:replace="layout/fragments.html::symbol-success"/>
+            <span th:text="${message}">완료</span>
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
+        </div>
+        <form action="#" class="needs-validation col-sm-6" method="post" novalidate th:action="@{/email-login}">
+            <div class="form-group mb-3">
+                <label for="email">가입 할 때 사용한 이메일</label>
+                <input aria-describedby="emailHelp" class="form-control" id="email" name="email"
+                       placeholder="your@email.com" required type="email">
+                <small class="form-text text-muted" id="emailHelp">
+                    가입할 때 사용한 이메일을 입력하세요.
+                </small>
+                <small class="invalid-feedback">이메일을 입력하세요.</small>
+            </div>
+
+            <div class="form-group">
+                <button aria-describedby="submitHelp" class="btn btn-success btn-block" type="submit">
+                    로그인 링크 보내기
+                </button>
+                <small class="form-text text-muted" id="submitHelp">
+                    Webluxible에 처음 오신거라면 <a href="#" th:href="@{/sign-up}">계정을 먼저 만드세요.</a>
+                </small>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script></script>
+</html>

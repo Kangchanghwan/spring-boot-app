@@ -11,7 +11,7 @@
 <div class="container">
     <div class="row mt-5 justify-content-center">
             <div class="col-2">
-                <div th:replace="layout/profile.html::settings-menu (currentMenu='notification')"></div>
+                <div th:replace="layout/fragments.html::settings-menu (currentMenu='notification')"></div>
             </div>
         <div class="col-8">
             <div th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
@@ -71,7 +71,7 @@
         </div>
     </div>
 </div>
-<script type="application/javascript" th:replace="layout/profile.html::form-validation">
+<script th:replace="layout/fragments.html::form-validation" type="application/javascript">
 </script>
 
 </body>

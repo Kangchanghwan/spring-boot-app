@@ -2,11 +2,9 @@ package clone.jaime.app.springbootapp.server.account.domain;
 
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
 import lombok.Getter;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -19,7 +17,7 @@ public class UserAccount extends User {
 
     @Getter
     private final Account account;
-    //@CurrentUser 어노테이션에서 account를 반화니하도록 하였기 때문에
+    //@CurrentUser 어노테이션에서 account를 반환하도록 하였기 때문에
     // 반드시 변수이름을 account로 동일시 해야한다.
 
     public UserAccount(Account account) {

@@ -29,6 +29,7 @@ class MainControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+    //가상,.
     @Autowired
     AccountService accountService;
     @Autowired

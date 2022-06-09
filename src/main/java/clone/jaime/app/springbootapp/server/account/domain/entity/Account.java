@@ -1,15 +1,12 @@
 package clone.jaime.app.springbootapp.server.account.domain.entity;
 
 
-import clone.jaime.app.springbootapp.server.account.domain.entity.support.ListStringConverter;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.NotificationForm;
-import clone.jaime.app.springbootapp.server.account.endpoint.controller.Profile;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -45,6 +42,12 @@ public class Account extends AuditingEntity{
 
     @Embedded
     private NotificationSetting notificationSetting;
+
+
+    public boolean isValid(String token) {
+        return this.emailToken.equals(token);
+    }
+
 
     public void generateToken() {
         this.emailToken = UUID.randomUUID().toString();

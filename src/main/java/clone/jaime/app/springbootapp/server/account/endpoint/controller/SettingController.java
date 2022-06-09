@@ -4,6 +4,8 @@ package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 import clone.jaime.app.springbootapp.server.account.application.AccountService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
 import clone.jaime.app.springbootapp.server.account.domain.entity.support.CurrentUser;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.validator.NicknameFormValidator;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.validator.PasswordFormValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

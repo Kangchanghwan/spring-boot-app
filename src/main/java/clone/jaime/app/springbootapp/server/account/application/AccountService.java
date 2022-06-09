@@ -193,4 +193,13 @@ public class AccountService implements UserDetailsService {
         login(account);
         //인증 정보를 업데이트 하였어도 실제 반영하기 위해서는 다시로그인 메서드를 호출해주어 인증정보를 갱신한다.
     }
+
+    public void sendLoginLink(Account account) {
+        account.generateToken();
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(account.getEmail());
+        mailMessage.setSubject("[CokeBear] 로그인 링크");
+        mailMessage.setText("/login-by-email?token=" + account.getEmailToken() + "&email=" + account.getEmail());
+        javamailSender.send(mailMessage);
+    }
 }
