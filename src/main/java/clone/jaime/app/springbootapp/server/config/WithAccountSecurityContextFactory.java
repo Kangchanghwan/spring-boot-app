@@ -2,14 +2,13 @@ package clone.jaime.app.springbootapp.server.config;
 
 import clone.jaime.app.springbootapp.server.account.application.AccountService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.support.WithAccount;
-import clone.jaime.app.springbootapp.server.account.endpoint.controller.SignUpForm;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.SignUpForm;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
-import org.springframework.stereotype.Component;
 
 public class WithAccountSecurityContextFactory implements WithSecurityContextFactory<WithAccount> {
 

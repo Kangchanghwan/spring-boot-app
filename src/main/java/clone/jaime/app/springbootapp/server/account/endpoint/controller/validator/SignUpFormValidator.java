@@ -1,6 +1,6 @@
 package clone.jaime.app.springbootapp.server.account.endpoint.controller.validator;
 
-import clone.jaime.app.springbootapp.server.account.endpoint.controller.SignUpForm;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.SignUpForm;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

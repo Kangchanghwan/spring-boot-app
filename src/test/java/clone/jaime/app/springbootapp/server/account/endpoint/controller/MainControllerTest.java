@@ -1,6 +1,7 @@
 package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 
 import clone.jaime.app.springbootapp.server.account.application.AccountService;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.SignUpForm;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

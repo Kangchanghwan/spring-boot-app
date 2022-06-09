@@ -4,9 +4,10 @@ package clone.jaime.app.springbootapp.server.account.application;
 import clone.jaime.app.springbootapp.server.account.domain.UserAccount;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Tag;
-import clone.jaime.app.springbootapp.server.account.endpoint.controller.NotificationForm;
+import clone.jaime.app.springbootapp.server.account.domain.entity.Zone;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.Profile;
-import clone.jaime.app.springbootapp.server.account.endpoint.controller.SignUpForm;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.NotificationForm;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.SignUpForm;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.api.Message;
@@ -67,21 +68,8 @@ public class AccountService implements UserDetailsService {
      * @return
      */
     public Account saveNewAccount(SignUpForm signUpForm) {
-        Account account = Account.builder() // Entity 생성한다.
-                .email(signUpForm.getEmail())
-                .nickname(signUpForm.getNickname())
-                .isValid(false)
-                .password(passwordEncoder.encode(signUpForm.getPassword()))
-                //password의 경우 암호화가 필요하나 일단 평문으로 작성한다.
-                .notificationSetting(Account.NotificationSetting.builder()
-                        .studyCreatedByWeb(true)
-                        .studyUpdatedByWeb(true)
-                        .studyRegistrationResultByEmailByWeb(true)
-                        .studyCreatedByEmail(false)
-                        .studyUpdatedByEmail(false)
-                        .studyRegistrationResultByEmailByEmail(false)
-                        .build())
-                .build();
+        Account account = Account.with(signUpForm.getEmail(), signUpForm.getNickname(), passwordEncoder.encode(signUpForm.getPassword()));
+        account.generateToken();
         Account newAccount = accountRepository.save(account);
         return newAccount;
     }
@@ -93,8 +81,6 @@ public class AccountService implements UserDetailsService {
      */
     public Account signup(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
-        newAccount.generateToken();
-        //이메일 인증용 토큰을 생성한다.
         saveVerificationEmail(newAccount);
         return newAccount;
     }
@@ -215,5 +201,18 @@ public class AccountService implements UserDetailsService {
 
     public void removeTag(Account account, Tag tag) {
         accountRepository.findById(account.getId()).ifPresent(a -> a.getTags().remove(tag));
+    }
+
+    public Set<Zone> getZones(Account account) {
+        return accountRepository.findById(account.getId()).orElseThrow().getZones();
+    }
+
+    public void addZone(Account account, Zone zone) {
+        accountRepository.findById(account.getId()).orElseThrow().getZones().add(zone);
+    }
+
+    public void removeZone(Account account, Zone zone) {
+        accountRepository.findById(account.getId()).orElseThrow().getZones().remove(zone);
+
     }
 }

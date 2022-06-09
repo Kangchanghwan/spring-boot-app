@@ -1,12 +1,13 @@
 package clone.jaime.app.springbootapp.server.account.domain.entity;
 
 
-import clone.jaime.app.springbootapp.server.account.endpoint.controller.NotificationForm;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.NotificationForm;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -38,13 +39,24 @@ public class Account extends AuditingEntity{
     private String phone;
     private String emailToken;
     @ManyToMany
-    private Set<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
+
+    @ManyToMany
+    private Set<Zone> zones = new HashSet<>();
     //many to many 어노테이션을 설정시 자동으로 매핑 테이블이 생긴다.
     @Embedded
     private Profile profile;
 
     @Embedded
-    private NotificationSetting notificationSetting;
+    private NotificationSetting notificationSetting = new NotificationSetting();
+
+    public static Account with(String email, String nickname, String password) {
+        Account account = new Account();
+        account.email = email;
+        account.nickname = nickname;
+        account.password = password;
+        return account;
+    }
 
 
     public boolean isValid(String token) {

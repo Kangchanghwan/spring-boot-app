@@ -4,10 +4,13 @@ package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 import clone.jaime.app.springbootapp.server.account.application.AccountService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Tag;
+import clone.jaime.app.springbootapp.server.account.domain.entity.Zone;
 import clone.jaime.app.springbootapp.server.account.domain.entity.support.CurrentUser;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.*;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.validator.NicknameFormValidator;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.validator.PasswordFormValidator;
 import clone.jaime.app.springbootapp.server.account.infra.repository.TagRepository;
+import clone.jaime.app.springbootapp.server.account.infra.repository.ZoneRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +31,9 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 public class SettingController {
+    static final String SETTINGS_ZONES_VIEW_NAME = "settings/zones";
 
-
+    static final String SETTINGS_ZONES_URL = "/" + SETTINGS_ZONES_VIEW_NAME;
     static final String SETTINGS_TAGS_VIEW_NAME = "settings/tags";
     static final String SETTINGS_TAGS_URL = "/" + SETTINGS_TAGS_VIEW_NAME;
     static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
@@ -45,6 +49,8 @@ public class SettingController {
 
     private final AccountService accountService;
     private final TagRepository tagRepository;
+
+    private final ZoneRepository zoneRepository;
     private final PasswordFormValidator passwordFormValidator;
     private final NicknameFormValidator nicknameFormValidator;
 
@@ -58,6 +64,42 @@ public class SettingController {
     @InitBinder("nicknameForm")
     public void nicknameFormValidator(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(nicknameFormValidator);
+    }
+
+    @GetMapping(SETTINGS_ZONES_URL)
+    public String updateZones(@CurrentUser Account account, Model model) {
+        model.addAttribute(account);
+        Set<Zone> zones = accountService.getZones(account);
+        model.addAttribute("zones", zones.stream()
+                .map(Zone::toString)
+                .collect(Collectors.toList()));
+        List<String> allZones = zoneRepository.findAll().stream().map(Zone::toString).collect(Collectors.toList());
+        String whitelist = null;
+        try {
+            whitelist = objectMapper.writeValueAsString(allZones);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        model.addAttribute("whitelist", whitelist);
+        return SETTINGS_ZONES_VIEW_NAME;
+    }
+
+    @PostMapping(SETTINGS_ZONES_URL + "/add")
+    @ResponseStatus(HttpStatus.OK)
+    public void addZone(@CurrentUser Account account, @RequestBody ZoneForm zoneForm) {
+        Zone zone = zoneRepository
+                .findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName())
+                .orElseThrow(IllegalArgumentException::new);
+        accountService.addZone(account, zone);
+    }
+
+    @PostMapping(SETTINGS_ZONES_URL + "/remove")
+    @ResponseStatus(HttpStatus.OK)
+    public void removeZone(@CurrentUser Account account, @RequestBody ZoneForm zoneForm) {
+        Zone zone = zoneRepository
+                .findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName())
+                .orElseThrow(IllegalArgumentException::new);
+        accountService.removeZone(account, zone);
     }
 
     @GetMapping(SETTINGS_TAGS_URL)

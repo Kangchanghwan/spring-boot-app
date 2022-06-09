@@ -3,6 +3,7 @@ package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 import clone.jaime.app.springbootapp.server.account.application.AccountService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
 import clone.jaime.app.springbootapp.server.account.domain.entity.support.CurrentUser;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.SignUpForm;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.validator.SignUpFormValidator;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +41,10 @@ public class AccountController {
             model.addAttribute("error", "유효한 이메일 주소가 아닙니다.");
             return "account/email-login";
         }
-//        if(!account.enableToSendEmail()){
-//            model.addAttribute("error","너무 잦은 요청입니다. 5분 뒤에 다시 시도하세요.");
-//            return "account/email-login";
-//        }
+        if (!account.enableToSendEmail()) {
+            model.addAttribute("error", "너무 잦은 요청입니다. 5분 뒤에 다시 시도하세요.");
+            return "account/email-login";
+        }
         accountService.sendLoginLink(account);
         attributes.addFlashAttribute("message", "로그인 가능한 링크를 이메일로 전송하였습니다.");
         return "redirect:/email-login";
@@ -136,11 +137,11 @@ public class AccountController {
     }
     @GetMapping("/resend-email")
     public String resendEmail(@CurrentUser Account account, Model model){
-        if(account.enableToSendEmail()){
+        if (!account.enableToSendEmail()) {
             //이메일 재전송할 때 호출되는 부분으로 새로고침이나 악용하지 못하도록 5분에
             //한 번만 메일을 보낼 수 있도록 방어 로직을 만든다.
-            model.addAttribute("error","인증 이메일 5분에 한 번만 전송할 수 있습니다.");
-            model.addAttribute("email",account.getEmail());
+            model.addAttribute("error", "인증 이메일 5분에 한 번만 전송할 수 있습니다.");
+            model.addAttribute("email", account.getEmail());
             return "account/check-email";
         }
         accountService.saveVerificationEmail(account);

@@ -1,6 +1,6 @@
 package clone.jaime.app.springbootapp.server.account.endpoint.controller.validator;
 
-import clone.jaime.app.springbootapp.server.account.endpoint.controller.PasswordForm;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.PasswordForm;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

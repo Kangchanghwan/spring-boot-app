@@ -1,4 +1,4 @@
-package clone.jaime.app.springbootapp.server.account.endpoint.controller;
+package clone.jaime.app.springbootapp.server.account.endpoint.controller.form;
 
 import lombok.AccessLevel;
 import lombok.Data;

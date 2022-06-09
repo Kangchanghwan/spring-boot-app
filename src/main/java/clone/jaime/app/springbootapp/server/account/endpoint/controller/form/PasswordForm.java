@@ -1,12 +1,9 @@
-package clone.jaime.app.springbootapp.server.account.endpoint.controller;
+package clone.jaime.app.springbootapp.server.account.endpoint.controller.form;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PasswordForm {
 
     @Length(min = 8, max = 50)

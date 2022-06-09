@@ -1,7 +1,7 @@
 package clone.jaime.app.springbootapp.server.account.endpoint.controller.validator;
 
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
-import clone.jaime.app.springbootapp.server.account.endpoint.controller.NicknameForm;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.NicknameForm;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
