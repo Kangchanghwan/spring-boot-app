@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.mail.internet.MimeMessage;
 import java.io.InputStream;
 
-@Profile("local")
+@Profile({"local", "local-db"})
 //active profile이 local일 때만 빈에 등록되도록합니다.
 @Component
 //외부애서 주입해서 사용할 수 있도록 component를 사용한다.
