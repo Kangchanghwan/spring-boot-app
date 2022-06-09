@@ -8,6 +8,7 @@ import org.hibernate.Hibernate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -36,7 +37,9 @@ public class Account extends AuditingEntity{
     private LocalDateTime emailTokenGeneratedAt;
     private String phone;
     private String emailToken;
-
+    @ManyToMany
+    private Set<Tag> tags;
+    //many to many 어노테이션을 설정시 자동으로 매핑 테이블이 생긴다.
     @Embedded
     private Profile profile;
 
