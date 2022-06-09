@@ -3,37 +3,40 @@ package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 
 import clone.jaime.app.springbootapp.server.account.application.AccountService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
+import clone.jaime.app.springbootapp.server.account.domain.entity.Tag;
 import clone.jaime.app.springbootapp.server.account.domain.entity.support.CurrentUser;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.validator.NicknameFormValidator;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.validator.PasswordFormValidator;
+import clone.jaime.app.springbootapp.server.account.infra.repository.TagRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
 public class SettingController {
 
 
-    static final String SETTING_TAGS_VIEW_NAME = "settings/tags";
-    static final String SETTING_TAGS_URL = "/" + SETTING_TAGS_VIEW_NAME;
-
-
+    static final String SETTINGS_TAGS_VIEW_NAME = "settings/tags";
+    static final String SETTINGS_TAGS_URL = "/" + SETTINGS_TAGS_VIEW_NAME;
     static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
     static final String SETTINGS_PROFILE_URL = "/" + SETTINGS_PROFILE_VIEW_NAME;
     // 테스트 코드에서 재사용 하기 위해 default로 접근제한자 설정을 해준다.
     static final String SETTINGS_PASSWORD_VIEW_NAME = "settings/password";
     static final String SETTINGS_PASSWORD_URL = "/" + SETTINGS_PASSWORD_VIEW_NAME;
-
     static final String SETTINGS_NOTIFICATION_VIEW_NAME = "settings/notification";
     static final String SETTINGS_NOTIFICATION_URL = "/" + SETTINGS_NOTIFICATION_VIEW_NAME;
 
@@ -41,9 +44,11 @@ public class SettingController {
     static final String SETTINGS_ACCOUNT_URL = "/" + SETTINGS_ACCOUNT_VIEW_NAME;
 
     private final AccountService accountService;
+    private final TagRepository tagRepository;
     private final PasswordFormValidator passwordFormValidator;
     private final NicknameFormValidator nicknameFormValidator;
 
+    private final ObjectMapper objectMapper;
 
     @InitBinder("passwordForm")
     public void passwordFormValidator(WebDataBinder webDataBinder) {
@@ -55,10 +60,47 @@ public class SettingController {
         webDataBinder.addValidators(nicknameFormValidator);
     }
 
-    @GetMapping(SETTING_TAGS_URL)
+    @GetMapping(SETTINGS_TAGS_URL)
     public String updateTags(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
-        return SETTING_TAGS_VIEW_NAME;
+        Set<Tag> tags = accountService.getTags(account);
+        model.addAttribute("tags",
+                tags.stream()
+                        .map(t -> t.getTitle())
+                        .collect(Collectors.toList()));
+        List<String> allTags = tagRepository.findAll()
+                .stream()
+                .map(Tag::getTitle)
+                .collect(Collectors.toList());
+
+        String whitelist = null;
+        try {
+            whitelist = objectMapper.writeValueAsString(allTags);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        model.addAttribute("whitelist", whitelist);
+        return SETTINGS_TAGS_VIEW_NAME;
+    }
+
+    @PostMapping(SETTINGS_TAGS_URL + "/add")
+    @ResponseStatus(HttpStatus.OK)
+    public void addTag(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+        String title = tagForm.getTagTitle();
+        Tag tag = tagRepository.findByTitle(title)
+                .orElseGet(() -> tagRepository.save(Tag.builder()
+                        .title(title)
+                        .build()));
+        accountService.addTag(account, tag);
+    }
+
+    @PostMapping(SETTINGS_TAGS_URL + "/remove")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteTag(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+        String title = tagForm.getTagTitle();
+        Tag tag = tagRepository.findByTitle(title)
+                .orElseThrow(IllegalArgumentException::new);
+        accountService.removeTag(account, tag);
     }
 
     @GetMapping(SETTINGS_ACCOUNT_URL)

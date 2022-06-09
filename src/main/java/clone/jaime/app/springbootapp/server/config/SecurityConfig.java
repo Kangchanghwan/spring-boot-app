@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          * profile의 경우 다른 사람의 것도 조회할 수 있어야 하므로
          * GET 메서드를 사용하고 /profile로 시작하는 모든 url 또한 인증 없이 접근할 수 있게 하였습니다.
          */
-        http.csrf().disable();
+
     }
 
     @Bean

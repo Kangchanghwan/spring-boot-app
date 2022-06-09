@@ -3,6 +3,7 @@ package clone.jaime.app.springbootapp.server.account.application;
 
 import clone.jaime.app.springbootapp.server.account.domain.UserAccount;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
+import clone.jaime.app.springbootapp.server.account.domain.entity.Tag;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.NotificationForm;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.Profile;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.SignUpForm;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -201,5 +203,17 @@ public class AccountService implements UserDetailsService {
         mailMessage.setSubject("[CokeBear] 로그인 링크");
         mailMessage.setText("/login-by-email?token=" + account.getEmailToken() + "&email=" + account.getEmail());
         javamailSender.send(mailMessage);
+    }
+
+    public Set<Tag> getTags(Account account) {
+        return accountRepository.findById(account.getId()).orElseThrow().getTags();
+    }
+
+    public void addTag(Account account, Tag tag) {
+        accountRepository.findById(account.getId()).ifPresent(a -> a.getTags().add(tag));
+    }
+
+    public void removeTag(Account account, Tag tag) {
+        accountRepository.findById(account.getId()).ifPresent(a -> a.getTags().remove(tag));
     }
 }
