@@ -54,7 +54,7 @@ public class AccountController {
     @GetMapping("login-by-email")
     public String loginByEmail(String token, String email, Model model) {
         Account account = accountRepository.findByEmail(email);
-        if (account == null || !account.isValid(token)) {
+        if (account == null || !account.isTokenValid(token)) {
             model.addAttribute("error", "로그인할 수 없습니다.");
             return "account/logged-in-by-email";
         }

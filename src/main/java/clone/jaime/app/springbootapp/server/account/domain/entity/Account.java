@@ -34,7 +34,7 @@ public class Account extends AuditingEntity{
     //사용자들에게 노출될 닉네임이다. 유니크 제약 조건을 추가해 고유값만 가질 수 있다.
     private String password;
     private LocalDateTime joinedAt;
-    private Boolean isValid;
+    private boolean isValid;
     private LocalDateTime emailTokenGeneratedAt;
     private String phone;
     private String emailToken;
@@ -59,7 +59,7 @@ public class Account extends AuditingEntity{
     }
 
 
-    public boolean isValid(String token) {
+    public boolean isTokenValid(String token) {
         return this.emailToken.equals(token);
     }
 

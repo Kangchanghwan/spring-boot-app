@@ -1,5 +1,7 @@
 package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 
+import clone.jaime.app.springbootapp.mail.EmailMessage;
+import clone.jaime.app.springbootapp.mail.EmailService;
 import clone.jaime.app.springbootapp.server.account.application.AccountService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
@@ -9,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,11 +35,13 @@ class AccountControllerTest {
     @Autowired
     AccountRepository accountRepository;
     //이메일 검증을 위해 repository를 주입해준다.
-    @MockBean
-    JavaMailSender mailSender;
+
     //메일을 전송했는지 확인한다.
     //실제로 전송야부를 확인하긴 어렵기 때문에 mockBean을 이용하여 주입한다.
-    //mailSender가 send라는 메서드를 호출하고 그때 전달된 타입이 Simplemassage 타입인지 확인한다.
+    //mailSender가 send라는 메서드를 호출하고 그때 전달된 타입이 Simplemassage 타입인지 확인한다.\
+
+    @MockBean
+    EmailService emailService;
     @Autowired
     AccountService accountService;
     /**
@@ -107,9 +109,9 @@ class AccountControllerTest {
         //이메일이 정상적으로 저장되었는지 확인한다.
         Account account = accountRepository.findByEmail("lgodl1596@naver.com");
         assertNotEquals(account.getPassword(), "1q2w3e4r!");
-        then(mailSender)
+        then(emailService)
                 .should()
-                .send(any(SimpleMailMessage.class));
+                .sendEmail(any(EmailMessage.class));
         //메일을 전송했는지 확인 후 메일 타입이 SimpleMailMessage타입인지 확인한다.
     }
 

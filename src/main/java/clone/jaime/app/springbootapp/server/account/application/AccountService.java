@@ -1,6 +1,8 @@
 package clone.jaime.app.springbootapp.server.account.application;
 
 
+import clone.jaime.app.springbootapp.mail.EmailMessage;
+import clone.jaime.app.springbootapp.mail.EmailService;
 import clone.jaime.app.springbootapp.server.account.domain.UserAccount;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Tag;
@@ -13,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.json.simple.JSONObject;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,11 +35,12 @@ import java.util.Set;
 @Transactional
 public class AccountService implements UserDetailsService {
 
+    public static final String url = "http://localhost:8080";
+
     private final AccountRepository accountRepository;
     //계정 정보를 저장하기 위해 repository를 주입
-    private final JavaMailSender javamailSender;
-    //인증메일을 보내기위해 JavaMailSender를 주입한다. 이때 실체로 메일을 보내는 것이아니라
-    // 로컬에서 로그로만 확인하기위해 직접 구현해 주입할 수 있도록 바로 아래 설정할 예정합니다.
+    private final EmailService emailService;
+
     private final PasswordEncoder passwordEncoder;
     //비밀번호를 변경해주는 클래스를 주입 한다.
 
@@ -49,15 +50,11 @@ public class AccountService implements UserDetailsService {
      */
 
     public void saveVerificationEmail(Account newAccount) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        //이메일 객체를 생성하고 이메일의 내용을 채운다.
-        mailMessage.setTo(newAccount.getEmail());
-        mailMessage.setSubject("회원 가입 인증");
-        mailMessage.setText(String.format("/check-email-token?token=%s&email=%s",
-                newAccount.getEmailToken(), newAccount.getEmail()));
-        //이메일 본문에 추가할 링크를 작성한다. 나중에 사용자가 링크를 클릭했을 때
-        // 다시 서버로 요청해야하고 이 부분에 대한 구현이 되어있어야 이메일 인증을 마칠 수 있습니다.
-        javamailSender.send(mailMessage);
+        emailService.sendEmail(EmailMessage.builder()
+                .to(newAccount.getEmail())
+                .message(String.format(url+"/check-email-token?token=%s&email=%s",
+                        newAccount.getEmailToken(), newAccount.getEmail()))
+                .subject("회원 가입 인증").build());
         //센더를 통해 메일을 보낸다.
     }
 
@@ -184,11 +181,10 @@ public class AccountService implements UserDetailsService {
 
     public void sendLoginLink(Account account) {
         account.generateToken();
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(account.getEmail());
-        mailMessage.setSubject("[CokeBear] 로그인 링크");
-        mailMessage.setText("/login-by-email?token=" + account.getEmailToken() + "&email=" + account.getEmail());
-        javamailSender.send(mailMessage);
+        emailService.sendEmail(EmailMessage.builder()
+                .to(account.getEmail())
+                .message(url+"/login-by-email?token=" + account.getEmailToken() + "&email=" + account.getEmail())
+                .subject("[CokeBear] 로그인 링크").build());
     }
 
     public Set<Tag> getTags(Account account) {
