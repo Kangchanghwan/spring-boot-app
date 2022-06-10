@@ -11,9 +11,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 @Profile("!local")
+@Service
 @RequiredArgsConstructor
 @Slf4j
-@Service
 public class HtmlEmailService implements EmailService {
 
     private final JavaMailSender javaMailSender;
@@ -27,7 +27,6 @@ public class HtmlEmailService implements EmailService {
             mimeMessageHelper.setTo(emailMessage.getTo());
             mimeMessageHelper.setSubject(emailMessage.getSubject());
             mimeMessageHelper.setText(emailMessage.getMessage(),true);
-
             javaMailSender.send(mimeMessage);
             log.info("sent email : {}" , emailMessage.getMessage());
         } catch (MessagingException e) {

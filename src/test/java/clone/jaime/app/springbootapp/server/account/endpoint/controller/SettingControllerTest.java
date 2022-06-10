@@ -1,5 +1,6 @@
 package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 
+import clone.jaime.app.springbootapp.mail.EmailService;
 import clone.jaime.app.springbootapp.server.account.application.AccountService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Tag;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,7 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @AutoConfigureMockMvc
 class SettingControllerTest {
-
+    @MockBean
+    EmailService emailService;
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -44,7 +47,6 @@ class SettingControllerTest {
     TagRepository tagRepository;
     @Autowired
     ObjectMapper objectMapper;
-
 
     @Autowired
     ZoneRepository zoneRepository;

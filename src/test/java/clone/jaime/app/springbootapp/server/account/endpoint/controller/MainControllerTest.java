@@ -1,5 +1,6 @@
 package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 
+import clone.jaime.app.springbootapp.mail.EmailService;
 import clone.jaime.app.springbootapp.server.account.application.AccountService;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.SignUpForm;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +35,8 @@ class MainControllerTest {
     AccountService accountService;
     @Autowired
     AccountRepository accountRepository;
-
+    @MockBean
+    EmailService emailService;
 
     @BeforeEach
     void beforeEach() {
