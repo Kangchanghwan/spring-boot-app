@@ -78,7 +78,8 @@ public class Account extends AuditingEntity{
     }
 
     public boolean enableToSendEmail() {
-        return this.emailTokenGeneratedAt.isBefore(LocalDateTime.now().minusMinutes(5));
+//        return this.emailTokenGeneratedAt.isBefore(LocalDateTime.now().minusMinutes(1));
+        return true;
         //5분이 지났는지 체크한다.
     }
 

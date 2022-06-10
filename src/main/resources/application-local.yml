@@ -17,3 +17,5 @@ logging:
     org.hibernate:
       SQL: debug
       type.descriptor.sql.BasicBinder: trace # 로그 레벨 설정 추가
+app:
+  host: http://localhost:8080

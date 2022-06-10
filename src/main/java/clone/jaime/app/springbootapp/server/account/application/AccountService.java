@@ -1,6 +1,7 @@
 package clone.jaime.app.springbootapp.server.account.application;
 
 
+import clone.jaime.app.springbootapp.config.AppProperties;
 import clone.jaime.app.springbootapp.mail.EmailMessage;
 import clone.jaime.app.springbootapp.mail.EmailService;
 import clone.jaime.app.springbootapp.server.account.domain.UserAccount;
@@ -24,6 +25,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,7 +38,10 @@ import java.util.Set;
 @Transactional
 public class AccountService implements UserDetailsService {
 
-    public static final String url = "http://localhost:8080";
+
+    private final TemplateEngine templateEngine;
+    private final AppProperties appProperties;
+    // 스프링 설정 정보를 가져오는 객체
 
     private final AccountRepository accountRepository;
     //계정 정보를 저장하기 위해 repository를 주입
@@ -50,10 +56,17 @@ public class AccountService implements UserDetailsService {
      */
 
     public void saveVerificationEmail(Account newAccount) {
+        Context context = new Context();
+        context.setVariable("link", String.format("/check-email-token?token=%s&email=%s",
+                newAccount.getEmailToken(), newAccount.getEmail()));
+        context.setVariable("nickname", newAccount.getNickname());
+        context.setVariable("linkName", "이메일 인증하기");
+        context.setVariable("message","가입 인증을 위해 링크를 클릭하세요.");
+        context.setVariable("host",appProperties.getHost());
+        String message = templateEngine.process("mail/simple-link", context);
         emailService.sendEmail(EmailMessage.builder()
                 .to(newAccount.getEmail())
-                .message(String.format(url+"/check-email-token?token=%s&email=%s",
-                        newAccount.getEmailToken(), newAccount.getEmail()))
+                .message(message)
                 .subject("회원 가입 인증").build());
         //센더를 통해 메일을 보낸다.
     }
@@ -181,10 +194,20 @@ public class AccountService implements UserDetailsService {
 
     public void sendLoginLink(Account account) {
         account.generateToken();
+
+        Context context = new Context();
+        context.setVariable("link", "/login-by-email?token=" + account.getEmailToken() + "&email=" + account.getEmail());
+        context.setVariable("nickname", account.getNickname());
+        context.setVariable("linkName", "로그인 하기");
+        context.setVariable("message","로그인 하려면 아래 링크를 클릭하세요.");
+        context.setVariable("host",appProperties.getHost());
+        String message = templateEngine.process("mail/simple-link", context);
+
         emailService.sendEmail(EmailMessage.builder()
                 .to(account.getEmail())
-                .message(url+"/login-by-email?token=" + account.getEmailToken() + "&email=" + account.getEmail())
-                .subject("[CokeBear] 로그인 링크").build());
+                .message(message)
+                .subject("[CokeBear] 로그인 링크")
+                .build());
     }
 
     public Set<Tag> getTags(Account account) {
