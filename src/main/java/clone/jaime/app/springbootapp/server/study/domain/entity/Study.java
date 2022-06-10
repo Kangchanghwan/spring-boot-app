@@ -1,9 +1,10 @@
-package clone.jaime.app.springbootapp.server.account.domain.entity.study;
+package clone.jaime.app.springbootapp.server.study.domain.entity;
 
+import clone.jaime.app.springbootapp.server.account.domain.UserAccount;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
-import clone.jaime.app.springbootapp.server.account.domain.entity.Tag;
-import clone.jaime.app.springbootapp.server.account.domain.entity.Zone;
-import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.StudyForm;
+import clone.jaime.app.springbootapp.server.study.endpoint.form.StudyForm;
+import clone.jaime.app.springbootapp.server.tag.domain.entity.Tag;
+import clone.jaime.app.springbootapp.server.zone.domain.entity.Zone;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -72,5 +73,18 @@ public class Study {
     public void addManager(Account account) {
         managers.add(account);
     }
+
+    public boolean isJoinable(UserAccount userAccount){
+        Account account = userAccount.getAccount();
+        return this.isPublished() && this.isRecruiting() && !this.members.contains(account) && this.members.contains(account);
+    } // 가입 가능여부
+    public boolean isMember(UserAccount userAccount){
+        return this.members.contains(userAccount.getAccount());
+    }
+    // 스터디의 멤버 여부
+    public boolean isManager(UserAccount userAccount){
+        return this.managers.contains(userAccount.getAccount());
+    }
+    // 스터디의 관리자 여부
 
 }

@@ -1,4 +1,4 @@
-package clone.jaime.app.springbootapp.server.account.endpoint.controller;
+package clone.jaime.app.springbootapp.server.main.endpoint.controller;
 
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
 import clone.jaime.app.springbootapp.server.account.domain.entity.support.CurrentUser;

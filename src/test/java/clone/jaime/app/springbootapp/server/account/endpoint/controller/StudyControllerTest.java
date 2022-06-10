@@ -1,12 +1,12 @@
 package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 
 import clone.jaime.app.springbootapp.mail.EmailService;
-import clone.jaime.app.springbootapp.server.account.application.StudyService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
 import clone.jaime.app.springbootapp.server.account.domain.entity.support.WithAccount;
-import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.StudyForm;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
-import clone.jaime.app.springbootapp.server.account.infra.repository.StudyRepository;
+import clone.jaime.app.springbootapp.server.study.application.StudyService;
+import clone.jaime.app.springbootapp.server.study.endpoint.form.StudyForm;
+import clone.jaime.app.springbootapp.server.study.infra.repository.StudyRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

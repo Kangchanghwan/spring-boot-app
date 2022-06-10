@@ -1,4 +1,4 @@
-package clone.jaime.app.springbootapp.server.account.endpoint.controller.form;
+package clone.jaime.app.springbootapp.server.study.endpoint.form;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

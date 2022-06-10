@@ -1,6 +1,6 @@
 package clone.jaime.app.springbootapp.server.account.domain.entity.support;
 
-import clone.jaime.app.springbootapp.server.config.WithAccountSecurityContextFactory;
+import clone.jaime.app.springbootapp.config.WithAccountSecurityContextFactory;
 import org.springframework.security.test.context.support.WithSecurityContext;
 
 import java.lang.annotation.Retention;

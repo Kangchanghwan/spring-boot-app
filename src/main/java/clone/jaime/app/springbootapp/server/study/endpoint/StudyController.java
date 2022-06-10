@@ -1,11 +1,12 @@
-package clone.jaime.app.springbootapp.server.account.endpoint.controller;
+package clone.jaime.app.springbootapp.server.study.endpoint;
 
-import clone.jaime.app.springbootapp.server.account.application.StudyService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
-import clone.jaime.app.springbootapp.server.account.domain.entity.study.Study;
 import clone.jaime.app.springbootapp.server.account.domain.entity.support.CurrentUser;
-import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.StudyForm;
-import clone.jaime.app.springbootapp.server.account.endpoint.controller.validator.StudyFormValidator;
+import clone.jaime.app.springbootapp.server.study.application.StudyService;
+import clone.jaime.app.springbootapp.server.study.domain.entity.Study;
+import clone.jaime.app.springbootapp.server.study.endpoint.form.StudyForm;
+import clone.jaime.app.springbootapp.server.study.endpoint.validator.StudyFormValidator;
+import clone.jaime.app.springbootapp.server.study.infra.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
@@ -26,10 +28,20 @@ public class StudyController {
     private final StudyService studyService;
     private final StudyFormValidator studyFormValidator;
 
+    private final StudyRepository studyRepository;
+
 
     @InitBinder("studyForm")
     public void studyFormInitBinder(WebDataBinder webDataBinder){
         webDataBinder.addValidators(studyFormValidator);
+    }
+
+
+    @GetMapping("/study/{path}")
+    public String viewStudy(@CurrentUser Account account, @PathVariable String path,Model model){
+        model.addAttribute(account);
+        model.addAttribute(studyRepository.findByPath(path));
+        return "study/view";
     }
 
     @GetMapping("/new-study")

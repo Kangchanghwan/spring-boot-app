@@ -1,7 +1,7 @@
-package clone.jaime.app.springbootapp.server.account.endpoint.controller.validator;
+package clone.jaime.app.springbootapp.server.study.endpoint.validator;
 
-import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.StudyForm;
-import clone.jaime.app.springbootapp.server.account.infra.repository.StudyRepository;
+import clone.jaime.app.springbootapp.server.study.endpoint.form.StudyForm;
+import clone.jaime.app.springbootapp.server.study.infra.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

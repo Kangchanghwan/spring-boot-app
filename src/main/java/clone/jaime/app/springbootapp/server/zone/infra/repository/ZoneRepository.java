@@ -1,6 +1,6 @@
-package clone.jaime.app.springbootapp.server.account.infra.repository;
+package clone.jaime.app.springbootapp.server.zone.infra.repository;
 
-import clone.jaime.app.springbootapp.server.account.domain.entity.Zone;
+import clone.jaime.app.springbootapp.server.zone.domain.entity.Zone;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

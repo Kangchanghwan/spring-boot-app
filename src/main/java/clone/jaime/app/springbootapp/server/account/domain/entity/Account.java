@@ -2,6 +2,8 @@ package clone.jaime.app.springbootapp.server.account.domain.entity;
 
 
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.NotificationForm;
+import clone.jaime.app.springbootapp.server.tag.domain.entity.Tag;
+import clone.jaime.app.springbootapp.server.zone.domain.entity.Zone;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -95,7 +97,7 @@ public class Account extends AuditingEntity{
         }
     }
 
-    public void updateProfile(clone.jaime.app.springbootapp.server.account.endpoint.controller.Profile profile) {
+    public void updateProfile(clone.jaime.app.springbootapp.server.account.endpoint.controller.form.Profile profile) {
         if(this.profile == null){
             this.profile = new Profile();
         }

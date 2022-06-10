@@ -1,4 +1,4 @@
-package clone.jaime.app.springbootapp.server.config;
+package clone.jaime.app.springbootapp.config;
 
 import clone.jaime.app.springbootapp.server.account.application.AccountService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.support.WithAccount;

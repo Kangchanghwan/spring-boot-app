@@ -1,9 +1,9 @@
-package clone.jaime.app.springbootapp.server.account.application;
+package clone.jaime.app.springbootapp.server.study.application;
 
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
-import clone.jaime.app.springbootapp.server.account.domain.entity.study.Study;
-import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.StudyForm;
-import clone.jaime.app.springbootapp.server.account.infra.repository.StudyRepository;
+import clone.jaime.app.springbootapp.server.study.domain.entity.Study;
+import clone.jaime.app.springbootapp.server.study.endpoint.form.StudyForm;
+import clone.jaime.app.springbootapp.server.study.infra.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

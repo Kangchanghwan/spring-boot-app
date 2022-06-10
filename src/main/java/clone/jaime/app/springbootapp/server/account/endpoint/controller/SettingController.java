@@ -3,14 +3,14 @@ package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 
 import clone.jaime.app.springbootapp.server.account.application.AccountService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
-import clone.jaime.app.springbootapp.server.account.domain.entity.Tag;
-import clone.jaime.app.springbootapp.server.account.domain.entity.Zone;
 import clone.jaime.app.springbootapp.server.account.domain.entity.support.CurrentUser;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.*;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.validator.NicknameFormValidator;
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.validator.PasswordFormValidator;
-import clone.jaime.app.springbootapp.server.account.infra.repository.TagRepository;
-import clone.jaime.app.springbootapp.server.account.infra.repository.ZoneRepository;
+import clone.jaime.app.springbootapp.server.tag.domain.entity.Tag;
+import clone.jaime.app.springbootapp.server.tag.infra.repository.TagRepository;
+import clone.jaime.app.springbootapp.server.zone.domain.entity.Zone;
+import clone.jaime.app.springbootapp.server.zone.infra.repository.ZoneRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package clone.jaime.app.springbootapp.server.account.domain.entity;
+package clone.jaime.app.springbootapp.server.zone.domain.entity;
 
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package clone.jaime.app.springbootapp.server.config;
+package clone.jaime.app.springbootapp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

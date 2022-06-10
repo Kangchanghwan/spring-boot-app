@@ -1,7 +1,7 @@
-package clone.jaime.app.springbootapp.server.account.application;
+package clone.jaime.app.springbootapp.server.zone.application;
 
-import clone.jaime.app.springbootapp.server.account.domain.entity.Zone;
-import clone.jaime.app.springbootapp.server.account.infra.repository.ZoneRepository;
+import clone.jaime.app.springbootapp.server.zone.domain.entity.Zone;
+import clone.jaime.app.springbootapp.server.zone.infra.repository.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
