@@ -15,6 +15,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@NamedEntityGraph(name = "Study.withAll",
+attributeNodes = {
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("zones"),
+        @NamedAttributeNode("managers"),
+        @NamedAttributeNode("members"),
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Study {

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html th:replace="~{layout/common :: layout(~{::title},~{::div},~{::script})}"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>email-verification</title>
@@ -51,11 +51,121 @@
         </div>
     </div>
 </div>
+
+
+<!--스터디 메뉴, 파라미터로 아이템을 전달받아 보여줌-->
+<div class="row px-3 justify-content-center bg-light" th:fragment="study-menu (studyMenu)">
+    <nav class="col-10 nav nav-tabs">
+        <a class="nav-item nav-link" href="#" th:classappend="${studyMenu == 'info'}? active" th:href="@{'/study/' + ${study.path}}">
+            <i class="fa fa-info-circle"></i> 소개
+        </a>
+        <a class="nav-item nav-link" href="#" th:classappend="${studyMenu == 'members'}? active" th:href="@{'/study/' + ${study.path} + '/members'}">
+            <i class="fa fa-user"></i> 구성원
+        </a>
+        <a class="nav-item nav-link" href="#" th:classappend="${studyMenu == 'events'}? active" th:href="@{'/study/' + ${study.path} + '/events'}">
+            <i class="fa fa-calendar"></i> 모임
+        </a>
+        <a class="nav-item nav-link" href="#"
+           sec:authorize="isAuthenticated()" th:classappend="${studyMenu == 'settings'}? active" th:href="@{'/study/' + ${study.path} + '/settings/description'}" th:if="${study.isManager(#authentication.principal)}">
+            <i class="fa fa-cog"></i> 설정
+        </a>
+    </nav>
+</div>
+
+<!--배너-->
+<div class="row" id="study-logo" th:fragment="study-banner" th:if="${study.useBanner}">
+    <img th:src="${study.image}"/>
+</div>
+<!--스터디 정보-->
+<div th:fragment="study-info">
+    <div class="row pt-4 text-left justify-content-center bg-light">
+        <!--스터디 이름 표시-->
+        <div class="col-6">
+            <a class="text-decoration-none" href="#" th:href="@{'/study/' + ${study.path}}">
+                <span class="h2" th:text="${study.title}">스터디 이름</span>
+            </a>
+        </div>
+        <div class="col-4 text-right justify-content-end">
+            <!--스터디를 공개하지 않았을 경우-->
+            <span class="d-inline-block" data-bs-toggle="tooltip" data-placement="bottom" tabindex="0"
+                  th:if="${!study.published}" title="공개 준비중입니다.">
+                <button class="btn btn-primary btn-sm" disabled style="pointer-events: none;"
+                        type="button">DRAFT</button>
+            </span>
+            <!--스터디가 종료된 경우-->
+            <span class="d-inline-block" data-bs-toggle="tooltip" data-placement="bottom" tabindex="0"
+                  th:if="${study.closed}" title="종료된 스터디 입니다.">
+                <button class="btn btn-primary btn-sm" disabled style="pointer-events: none;"
+                        type="button">CLOSED</button>
+            </span>
+            <!--스터디 멤버를 모집하고있지 않은 경우-->
+            <span class="d-inline-block" data-bs-toggle="tooltip" data-placement="bottom" tabindex="0"
+                  th:if="${!study.recruiting}" title="현재 모집중이 아닙니다.">
+                <button class="btn btn-primary btn-sm" disabled style="pointer-events: none;" type="button">OFF</button>
+            </span>
+            <!--인증된 사용자이고 스터디가 가입 가능한 경우-->
+            <span aria-label="Basic example" class="btn-group"
+                  role="group" sec:authorize="isAuthenticated()" th:if="${study.isJoinable(#authentication.principal)}">
+                <!--스터디 가입 링크-->
+                <a class="btn btn-primary" th:href="@{'/study/' + ${study.path} + '/join'}">
+                    스터디 가입
+                </a>
+                <!--스터디 멤버 수-->
+                <a class="btn btn-primary" th:href="@{'/study/' + ${study.path} + '/members'}"
+                   th:text="${study.members.size()}">1</a>
+            </span>
+            <!--인증된 사용자이고 스터디 멤버인 경우-->
+            <span class="btn-group"
+                  role="group" sec:authorize="isAuthenticated()"
+                  th:if="${!study.closed && study.isMember(#authentication.principal)}">
+                <!--스터디 가입 링크-->
+                <a class="btn btn-outline-warning" th:href="@{'/study/' + ${study.path} + '/leave'}">
+                    스터디 탈퇴
+                </a>
+                <!--스터디 멤버 수-->
+                <a class="btn btn-primary" th:href="@{'/study/' + ${study.path} + '/members'}"
+                   th:text="${study.members.size()}">1</a>
+            </span>
+            <!--인증된 사용자이고 스터디 관리자인 경우-->
+            <span sec:authorize="isAuthenticated()"
+                  th:if="${study.published && !study.closed && study.isManager(#authentication.principal)}">
+                <!--모임 만들기 링크-->
+                <a class="btn btn-outline-primary" th:href="@{'/study/' + ${study.path} + '/new-event'}">
+                    <i class>a fa-plus"></i> 모임 만들기
+                </a>
+            </span>
+        </div>
+    </div>
+    <!--스터디 짧은 소개-->
+    <div class="row justify-content-center bg-light">
+        <div class="col-10">
+            <p class="lead" th:text="${study.shortDescription}"></p>
+        </div>
+    </div>
+    <!--태그, 지역-->
+    <div class="row justify-content-center bg-light">
+        <div class="col-10">
+            <p>
+                <span class="font-weight-light text-monospace badge badge-pill badge-info mr-3"
+                      th:each="tag: ${study.tags}">
+                    <a class="text-decoration-none text-white" th:href="@{'/search/tag/' + ${tag.title}}">
+                        <i class="fa fa-tag"></i> <span th:text="${tag.title}">Tag</span>
+                    </a>
+                </span>
+                <span class="font-weight-light text-monospace badge badge-primary mr-3" th:each="zone: ${study.zones}">
+                    <a class="text-decoration-none text-white" th:href="@{'/search/zone/' + ${zone.id}}">
+                        <i class="fa fa-globe"></i> <span th:text="${zone.localNameOfCity}">City</span>
+                    </a>
+                </span>
+            </p>
+        </div>
+    </div>
+</div>
+
+
 <script>
 </script>
 <script type="application/javascript" th:fragment="form-validation">
-
-
     (function () {
         'use strict';
 
@@ -76,6 +186,13 @@
             })
         }, false)
     }())
+</script>
+
+<!--툴팁 스크립트-->
+<script th:fragment="tooltip" type="application/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 </script>
 
 </body>

@@ -37,6 +37,28 @@ public class StudyControllerTest {
     StudyService studyService;
     @MockBean
     EmailService emailService;
+
+
+    @Test
+    @DisplayName("스터디 뷰")
+    @WithAccount("abc")
+    void studyView() throws Exception{
+        Account account = accountRepository.findByNickname("abc");
+        String studyPath = "study-path";
+        studyService.createNewStudy(StudyForm.builder()
+                        .path(studyPath)
+                        .title("study-title")
+                        .shortDescription("short-description")
+                        .fullDescription("full-description")
+                .build(),account);
+        mockMvc.perform(get("/study/" + studyPath))
+                .andExpect(status().isOk())
+                .andExpect(view().name("study/view"))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("study"));
+    }
+
+
     @Test
     @DisplayName("스터디 폼 조회")
     @WithAccount("abc")
@@ -105,6 +127,7 @@ public class StudyControllerTest {
                 .andExpect(view().name("study/form"))
                 .andExpect(model().hasErrors());
     }
+
 
 
 
