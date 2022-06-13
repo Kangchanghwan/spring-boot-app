@@ -6,7 +6,6 @@ import clone.jaime.app.springbootapp.server.study.application.StudyService;
 import clone.jaime.app.springbootapp.server.study.domain.entity.Study;
 import clone.jaime.app.springbootapp.server.study.endpoint.form.StudyForm;
 import clone.jaime.app.springbootapp.server.study.endpoint.validator.StudyFormValidator;
-import clone.jaime.app.springbootapp.server.study.infra.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,11 +27,10 @@ public class StudyController {
     private final StudyService studyService;
     private final StudyFormValidator studyFormValidator;
 
-    private final StudyRepository studyRepository;
 
 
     @InitBinder("studyForm")
-    public void studyFormInitBinder(WebDataBinder webDataBinder){
+    public void studyInitBinder(WebDataBinder webDataBinder){
         webDataBinder.addValidators(studyFormValidator);
     }
 
@@ -40,14 +38,14 @@ public class StudyController {
     @GetMapping("/study/{path}/members")
     public String viewStudyMembers(@CurrentUser Account account, @PathVariable String path, Model model){
         model.addAttribute(account);
-        model.addAttribute(studyRepository.findByPath(path));
+        model.addAttribute(studyService.getStudy(path));
         return "study/members";
     }
 
     @GetMapping("/study/{path}")
     public String viewStudy(@CurrentUser Account account, @PathVariable String path,Model model){
         model.addAttribute(account);
-        model.addAttribute(studyRepository.findByPath(path));
+        model.addAttribute(studyService.getStudy(path));
         return "study/view";
     }
 

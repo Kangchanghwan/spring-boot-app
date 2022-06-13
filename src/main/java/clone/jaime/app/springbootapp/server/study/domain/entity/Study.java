@@ -2,6 +2,7 @@ package clone.jaime.app.springbootapp.server.study.domain.entity;
 
 import clone.jaime.app.springbootapp.server.account.domain.UserAccount;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
+import clone.jaime.app.springbootapp.server.study.endpoint.form.StudyDescriptionForm;
 import clone.jaime.app.springbootapp.server.study.endpoint.form.StudyForm;
 import clone.jaime.app.springbootapp.server.tag.domain.entity.Tag;
 import clone.jaime.app.springbootapp.server.zone.domain.entity.Zone;
@@ -91,6 +92,11 @@ public class Study {
     // 스터디의 멤버 여부
     public boolean isManager(UserAccount userAccount){
         return this.managers.contains(userAccount.getAccount());
+    }
+
+    public void updateDescription(StudyDescriptionForm studyDescriptionForm) {
+        this.shortDescription = studyDescriptionForm.getShortDescription();
+        this.fullDescription = studyDescriptionForm.getFullDescription();
     }
     // 스터디의 관리자 여부
 

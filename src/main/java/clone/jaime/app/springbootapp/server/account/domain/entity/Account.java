@@ -2,6 +2,7 @@ package clone.jaime.app.springbootapp.server.account.domain.entity;
 
 
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.NotificationForm;
+import clone.jaime.app.springbootapp.server.study.domain.entity.Study;
 import clone.jaime.app.springbootapp.server.tag.domain.entity.Tag;
 import clone.jaime.app.springbootapp.server.zone.domain.entity.Zone;
 import lombok.*;
@@ -157,6 +158,11 @@ public class Account extends AuditingEntity{
         private Boolean studyUpdatedByWeb = true;
 
     }
+
+    public boolean isManagerOf(Study study){
+        return  study.getManagers().contains(this);
+    }
+
     //equals는 기본적으로 인스턴스가 동일한 경우만 true를 반환한다.
     //JPA의 경우 1차캐시에서 생성한 엔티티와는 동일하나,
     // 초기화 후 다시 동일한 엔티티를 읽은 경우 다른 객체가 반환된다.

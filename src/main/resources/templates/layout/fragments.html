@@ -20,20 +20,7 @@
                        th:classappend="${currentMenu == 'account'}? active" href="#" th:href="@{/settings/account}">계정</a>
                 </div>
                 <!-- svg 이미지 추가: 시작-->
-                <svg th:fragment="svg-symbols" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                    <symbol fill="currentColor" id="info-fill" viewBox="0 0 16 16">
-                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-                    </symbol>
-                    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-                    </symbol>
-                    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                    </symbol>
-                    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                    </symbol>
-                </svg>
+
                 <svg th:fragment="symbol-info" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:">
                     <use xlink:href="#info-fill"/>
                 </svg>
@@ -52,6 +39,70 @@
     </div>
 </div>
 
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark" th:fragment="navigation-bar">
+    <a class="navbar-brand ms-3" href="/" th:href="@{/}">
+        <img height="30" src="/images/logo.png" width="30">
+    </a>
+    <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+            data-bs-toggle="collapse" data-target="#navbarSupportedContent" type="button">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+                <form class="form-inline" method="get" th:action="@{/search/study}">
+                    <input aria-label="Search" class="form-control me-sm-2" name="keyword" placeholder="스터디 찾기"
+                           type="search"/>
+                </form>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav justify-content-end">
+            <li class="nav-item" sec:authorize="!isAuthenticated()">
+                <a class="nav-link" th:href="@{/login}">로그인</a>
+            </li>
+            <li class="nav-item" sec:authorize="!isAuthenticated()">
+                <a class="nav-link" th:href="@{/sign-up}">가입</a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" th:href="@{/notifications}">
+                    <i aria-hidden="true" class="fa fa-bell-o"></i> <!--"알림" 문자열을 종 모양 아이콘으로 수정-->
+                </a>
+            </li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <!-- 경로 오타 수정-->
+                <a class="nav-link btn btn-outline-primary" th:href="@{/new-study}">
+                    <i aria-hidden="true" class="fa fa-plus"></i> 스터디 개설 <!--"스터디 개설" 문자열 앞에 플러스 아이콘 추가-->
+                </a>
+            </li>
+            <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                   id="userDropdown" role="button">
+                    <!-- 이미지가 존재하면 이미지를, 그렇지 않으면 아바타를 보여주도록 수정(시작) -->
+                    <svg class="rounded border bg-light"
+                         height="24" th:data-jdenticon-value="${#authentication.name}" th:if="${#strings.isEmpty(account?.profile?.image)}"
+                         width="24"></svg><!--"프로필" 대신 아바타 이미지를 보여줌-->
+                    <img class="rounded border"
+                         height="24" th:if="${!#strings.isEmpty(account?.profile?.image)}" th:src="${account.profile.image}" width="24"/>
+                    <!-- 이미지가 존재하면 이미지를, 그렇지 않으면 아바타를 보여주도록 수정(끝) -->
+                </a>
+                <div aria-labelledby="userDropdown" class="dropdown-menu dropdown-menu-sm-end">
+                    <h6 class="dropdown-header">
+                        <span sec:authentication="name">Username</span>
+                    </h6>
+                    <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">프로필</a>
+                    <a class="dropdown-item">스터디</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" th:href="@{'/settings/profile'}">설정</a>
+                    <form action="#" class="form-inline my-2 my-lg-0" method="post" th:action="@{/logout}">
+                        <button class="dropdown-item" type="submit">로그아웃</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
 
 <!--스터디 메뉴, 파라미터로 아이템을 전달받아 보여줌-->
 <div class="row px-3 justify-content-center bg-light" th:fragment="study-menu (studyMenu)">
@@ -181,9 +232,39 @@
     </ul>
 </div>
 
+<div class="list-group" th:fragment="study-settings-menu (currentMenu)">
+    <a class="list-group-item list-group-item-action" href="#"
+       th:classappend="${currentMenu == 'description'}? active" th:href="@{'/study/' + ${study.path} + '/settings/description'}">소개</a>
+    <a class="list-group-item list-group-item-action" href="#"
+       th:classappend="${currentMenu == 'image'}? active" th:href="@{'/study/' + ${study.path} + '/settings/banner'}">배너 이미지</a>
+    <a class="list-group-item list-group-item-action" href="#"
+       th:classappend="${currentMenu == 'tags'}? active" th:href="@{'/study/' + ${study.path} + '/settings/tags'}">스터디 주제</a>
+    <a class="list-group-item list-group-item-action" href="#"
+       th:classappend="${currentMenu == 'zones'}? active" th:href="@{'/study/' + ${study.path} + '/settings/zones'}">활동 지역</a>
+    <a class="list-group-item list-group-item-action list-group-item-danger" href="#"
+       th:classappend="${currentMenu == 'study'}? active" th:href="@{'/study/' + ${study.path} + '/settings/study'}">스터디</a>
+</div>
 
-<script>
-</script>
+
+<div th:fragment="editor-script">
+    <script src="/node_modules/tinymce/tinymce.min.js"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea#fullDescription'
+        })
+    </script>
+</div>
+
+
+<div class="alert alert-info alert-dismissible fade show mt-3" role="alert" th:fragment="message" th:if="${message}">
+    <svg aria-label="Success:" class="bi flex-shrink-0 me-2" height="24" role="img" width="24">
+        <use xlink:href="#check-circle-fill"/>
+    </svg>
+    <span th:text="${message}">완료</span>
+    <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
+</div>
+
+
 <script type="application/javascript" th:fragment="form-validation">
     (function () {
         'use strict';

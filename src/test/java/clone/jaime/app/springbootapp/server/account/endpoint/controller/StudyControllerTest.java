@@ -38,6 +38,8 @@ public class StudyControllerTest {
     StudyService studyService;
     @MockBean
     EmailService emailService;
+
+
     @Test
     @DisplayName("스터디 멤버 뷰")
     @WithAccount("abc")

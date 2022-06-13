@@ -151,14 +151,8 @@ public class AccountController {
     public String viewProfile(@PathVariable String nickname,
                               Model model,
                               @CurrentUser Account account){
-        Account byNickname = accountRepository.findByNickname(nickname);
-        //파라미터로 가져온 닉네임으로 account를 찾는다.
-        if(byNickname == null){
-            //만일 없다면
-            throw new IllegalArgumentException(nickname+"에 해당하는 사용자가 없습니다.");
-            //오류발생
-        }
-        log.info("byNickname = {}",byNickname);
+        Account byNickname = accountService.getAccountBy(nickname);
+
         model.addAttribute(byNickname);
         //있다면 객체를 모델에 담아 보낸다.
         model.addAttribute("isOwner",byNickname.equals(account));
