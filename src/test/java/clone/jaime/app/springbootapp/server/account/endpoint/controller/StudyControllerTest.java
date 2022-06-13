@@ -3,6 +3,7 @@ package clone.jaime.app.springbootapp.server.account.endpoint.controller;
 import clone.jaime.app.springbootapp.mail.EmailService;
 import clone.jaime.app.springbootapp.server.account.domain.entity.Account;
 import clone.jaime.app.springbootapp.server.account.domain.entity.support.WithAccount;
+import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.Profile;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import clone.jaime.app.springbootapp.server.study.application.StudyService;
 import clone.jaime.app.springbootapp.server.study.endpoint.form.StudyForm;
@@ -37,6 +38,25 @@ public class StudyControllerTest {
     StudyService studyService;
     @MockBean
     EmailService emailService;
+    @Test
+    @DisplayName("스터디 멤버 뷰")
+    @WithAccount("abc")
+    void studyMemberView() throws Exception{
+        Account account = accountRepository.findByNickname("abc");
+        account.updateProfile(Profile.from(account));
+        String studyPath = "study-path";
+        studyService.createNewStudy(StudyForm.builder()
+                .path(studyPath)
+                .title("study-title")
+                .shortDescription("short-description")
+                .fullDescription("full-description")
+                .build(),account);
+        mockMvc.perform(get("/study/" + studyPath + "/members"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("study/members"))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("study"));
+    }
 
 
     @Test

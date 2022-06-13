@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/common :: layout(~{::title},~{::div},~{::script})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>email-verification</title>
+</head>
+<body>
+<div class="container">
+    <div th:replace="layout/fragments.html :: study-info"></div>
+
+    <!--스터디 메뉴-->
+    <div th:replace="layout/fragments.html :: study-menu('members')"></div>
+
+    <div th:replace="layout/fragments.html :: member-list (${study.managers},${true})"></div>
+    <div th:replace="layout/fragments.html :: member-list (${study.members},${false})"></div>
+</div>
+<script th:replace="layout/fragments.html :: tooltip">
+</script>
+</body>
+</html>

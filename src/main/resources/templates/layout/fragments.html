@@ -162,6 +162,25 @@
     </div>
 </div>
 
+<!--현재 계정과 스터디 정보를 전달받아서 리스트 형태로 보여줌-->
+<div class="row px-3 justify-content-center" th:fragment="member-list (members, isManager)">
+    <ul class="list-unstyled col-10">
+        <li class="d-flex mt-3" th:each="member: ${members}">
+            <div class="flex-shrink-0">
+                <svg class="rounded border bg-light me-3" height="64" th:data-jdenticon-value="${member.nickname}" th:if="${#strings.isEmpty(member?.profile?.image)}" width="64"></svg>
+                <img class="rounded border me-3" height="64" th:if="${!#strings.isEmpty(member?.profile?.image)}" th:src="${member?.profile?.image}" width="64"/>
+            </div>
+            <div class="flex-grow-1 ms-3">
+                <h5 class="mt-0 mb-1">
+                    <span th:text="${member.nickname}"></span>
+                    <span class="badge bg-primary" th:if="${isManager}">관리자</span>
+                </h5>
+                <span th:text="${member.profile.bio}"></span>
+            </div>
+        </li>
+    </ul>
+</div>
+
 
 <script>
 </script>
