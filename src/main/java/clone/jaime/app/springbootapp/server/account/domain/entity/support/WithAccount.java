@@ -10,5 +10,5 @@ import java.lang.annotation.RetentionPolicy;
 @WithSecurityContext(factory = WithAccountSecurityContextFactory.class)
 //런타임시 동작하도록 설정
 public @interface WithAccount {
-    String value();
+    String[] value() default "";
 }

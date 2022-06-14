@@ -6,6 +6,7 @@ import clone.jaime.app.springbootapp.server.account.domain.entity.support.WithAc
 import clone.jaime.app.springbootapp.server.account.endpoint.controller.form.Profile;
 import clone.jaime.app.springbootapp.server.account.infra.repository.AccountRepository;
 import clone.jaime.app.springbootapp.server.study.application.StudyService;
+import clone.jaime.app.springbootapp.server.study.domain.entity.Study;
 import clone.jaime.app.springbootapp.server.study.endpoint.form.StudyForm;
 import clone.jaime.app.springbootapp.server.study.infra.repository.StudyRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -39,6 +41,45 @@ public class StudyControllerTest {
     @MockBean
     EmailService emailService;
 
+    @Test
+    @DisplayName("스터디 가입")
+    @WithAccount(value = {"coke","test"})
+    void joinStudy() throws Exception{
+
+        Account manager = accountRepository.findByNickname("coke");
+        String studyPath = "study-path";
+        Study study = studyService.createNewStudy(StudyForm.builder()
+                .path(studyPath)
+                .title("studyTitle")
+                .fullDescription("full~")
+                .shortDescription("short~").build(),manager );
+        mockMvc.perform(get("/study/" + studyPath + "/join"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + studyPath + "/members"));
+        Account member = accountRepository.findByNickname("test");
+        assertTrue(study.getMembers().contains(member));
+    }
+
+    @Test
+    @DisplayName("스터디 탈퇴")
+    @WithAccount(value = {"coke","test"})
+    void leaveStudy() throws Exception{
+
+        Account manager = accountRepository.findByNickname("coke");
+        String studyPath = "study-path";
+        Study study = studyService.createNewStudy(StudyForm.builder()
+                .path(studyPath)
+                .title("studyTitle")
+                .fullDescription("full~")
+                .shortDescription("short~").build(),manager );
+        Account member = accountRepository.findByNickname("test");
+
+        study.addMember(member);
+        mockMvc.perform(get("/study/" + studyPath + "/leave"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + studyPath + "/members"));
+        assertFalse(study.getMembers().contains(member));
+    }
 
     @Test
     @DisplayName("스터디 멤버 뷰")
