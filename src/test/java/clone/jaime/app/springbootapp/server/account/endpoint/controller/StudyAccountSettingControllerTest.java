@@ -70,6 +70,104 @@ public class StudyAccountSettingControllerTest {
         studyRepository.deleteAll();
     }
 
+
+    @Test
+    @DisplayName("스터디 삭제")
+    @WithAccount("abc")
+    void removeStudy() throws Exception{
+        mockMvc.perform(post("/study/"+path+"/settings/study/remove")
+                                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+        assertNull(studyRepository.findByPath(path));
+    }
+
+    @Test
+    @DisplayName("스터디 제목 변경")
+    @WithAccount("abc")
+    void updateStudyTitle() throws Exception{
+        String newTitle = "title2";
+        mockMvc.perform(post("/study/" + path + "/settings/study/title")
+                        .param("newTitle",newTitle)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + path + "/settings/study"))
+                .andExpect(flash().attributeExists("message"));
+        Study study =studyRepository.findByPath(path);
+        assertEquals(newTitle , study.getTitle());
+    }
+
+    @Test
+    @DisplayName("스터디 경로 변경")
+    @WithAccount("abc")
+    void updateStudyPath() throws Exception{
+        String newPath = "path2";
+        mockMvc.perform(post("/study/" + path + "/settings/study/path")
+                            .param("newPath",newPath)
+                            .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + newPath + "/settings/study"))
+                .andExpect(flash().attributeExists("message"));
+        Study study =studyRepository.findByPath(newPath);
+        assertEquals(newPath , study.getPath());
+    }
+
+    @Test
+    @DisplayName("스터디 팀원 모집 시작")
+    @WithAccount("abc")
+    void startRecruit() throws Exception{
+        Study study = studyRepository.findByPath(path);
+        studyService.publish(study);
+        mockMvc.perform(post("/study/" + path + "/settings/recruit/start")
+                            .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + path + "/settings/study"))
+                .andExpect(flash().attributeExists("message"));
+        assertTrue(study.isRecruiting());
+    }
+
+    @Test
+    @DisplayName("스터디 팀원 모집 중지 : 1시간 이내 시도 -> 실패")
+    @WithAccount("abc")
+    void stopRecruit() throws Exception{
+        Study study = studyRepository.findByPath(path);
+        studyService.publish(study);
+        studyService.startRecruit(study);
+        mockMvc.perform(post("/study/" + path + "/settings/recruit/stop")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + path + "/settings/study"))
+                .andExpect(flash().attributeExists("message"));
+        assertTrue(study.isRecruiting());
+    }
+
+
+    @Test
+    @DisplayName("스터디 공개")
+    @WithAccount("abc")
+    void publishStudy() throws Exception{
+        mockMvc.perform(post("/study/" + path + "/settings/study/publish")
+                            .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + path + "/settings/study"))
+                .andExpect(flash().attributeExists("message"));
+        Study study = studyRepository.findByPath(path);
+
+        assertTrue(study.isPublished());
+    }
+
+
+    @Test
+    @DisplayName("스터디 세팅 폼 조회(스터디)")
+    @WithAccount("abc")
+    void studySettingFormStudy() throws Exception{
+        mockMvc.perform(get("/study/" + path + "/settings/study"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("study/settings/study"))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("study"));
+    }
+
     @Test
     @DisplayName("스터디 태그 추가")
     @WithAccount("abc")
@@ -286,6 +384,8 @@ public class StudyAccountSettingControllerTest {
         assertNotEquals(shortDescriptionToBeUpdate, study.getShortDescription());
         assertNotEquals(fullDescriptionToBeUpdate, study.getFullDescription());
     }
+
+
 
 
 }

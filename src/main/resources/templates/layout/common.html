@@ -47,7 +47,7 @@
 
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/" th:href="@{/}">
+        <a class="navbar-brand ms-3" href="/" th:href="@{/}">
             <img src="https://getbootstrap.com/docs/5.1/assets/img/favicons/favicon.ico" width="30" height="30"
                  alt="webluxible" style="margin-left: 10px">
         </a>
@@ -56,7 +56,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarsExample04">
+        <div class="collapse navbar-collapse justify-content-between" id="navbarsExample04">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <form th:action="@{/search/study}" class="form-inline" method="get">
@@ -93,7 +93,7 @@
                              th:src="${account.profile.image}" width="24" height="24" class="rounded border"/>
                         <!-- 이미지가 존재하면 이미지를, 그렇지 않으면 아바타를 보여주도록 수정(끝) -->
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdown03">
+                    <ul aria-labelledby="dropdown03" class="dropdown-menu" style="left : -150%">
                         <li>
                             <h6 class="dropdown-header">
                                 <span sec:authentication="name">Username</span> <!--(2)-->

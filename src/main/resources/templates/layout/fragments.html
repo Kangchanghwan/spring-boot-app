@@ -11,26 +11,39 @@
         <div class="row mt-3 justify-content-center">
             <div class="col-2">
                 <div th:fragment="settings-menu (currentMenu)" class="list-group">
-                    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'profile'} ? active" href="#" th:href="@{/settings/profile}">프로필</a>
-                    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'password'} ? active" href="#" th:href="@{/settings/password}">패스워드</a>
-                    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'notification'} ? active" href="#" th:href="@{/settings/notification}">알림 설정</a>
-                    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'tags'} ? active" href="#" th:href="@{/settings/tags}">관심 주제</a>
-                    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'zones'} ? active" href="#" th:href="@{/settings/zones}">활동 지역</a>
+                    <a class="list-group-item list-group-item-action"
+                       href="#" th:classappend="${currentMenu == 'profile'} ? active"
+                       th:href="@{/settings/profile}">프로필</a>
+                    <a class="list-group-item list-group-item-action"
+                       href="#" th:classappend="${currentMenu == 'password'} ? active" th:href="@{/settings/password}">패스워드</a>
+                    <a class="list-group-item list-group-item-action"
+                       href="#" th:classappend="${currentMenu == 'notification'} ? active"
+                       th:href="@{/settings/notification}">알림 설정</a>
+                    <a class="list-group-item list-group-item-action" href="#"
+                       th:classappend="${currentMenu == 'tags'} ? active" th:href="@{/settings/tags}">관심 주제</a>
+                    <a class="list-group-item list-group-item-action"
+                       href="#" th:classappend="${currentMenu == 'zones'} ? active" th:href="@{/settings/zones}">활동
+                        지역</a>
                     <a class="list-group-item list-group-item-action list-group-item-danger"
-                       th:classappend="${currentMenu == 'account'}? active" href="#" th:href="@{/settings/account}">계정</a>
+                       href="#" th:classappend="${currentMenu == 'account'}? active"
+                       th:href="@{/settings/account}">계정</a>
                 </div>
                 <!-- svg 이미지 추가: 시작-->
 
-                <svg th:fragment="symbol-info" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:">
+                <svg aria-label="Info:" class="bi flex-shrink-0 me-2" height="24" role="img" th:fragment="symbol-info"
+                     width="24">
                     <use xlink:href="#info-fill"/>
                 </svg>
-                <svg th:fragment="symbol-success" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
+                <svg aria-label="Success:" class="bi flex-shrink-0 me-2" height="24" role="img" th:fragment="symbol-success"
+                     width="24">
                     <use xlink:href="#check-circle-fill"/>
                 </svg>
-                <svg th:fragment="symbol-warning" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
+                <svg aria-label="Warning:" class="bi flex-shrink-0 me-2" height="24" role="img" th:fragment="symbol-warning"
+                     width="24">
                     <use xlink:href="#exclamation-triangle-fill"/>
                 </svg>
-                <svg th:fragment="symbol-danger" class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                <svg aria-label="Danger:" class="bi flex-shrink-0 me-2" height="24" role="img" th:fragment="symbol-danger"
+                     width="24">
                     <use xlink:href="#exclamation-triangle-fill"/>
                 </svg>
                 <!-- svg 이미지 추가: 끝-->
@@ -43,7 +56,8 @@
     <a class="navbar-brand ms-3" href="/" th:href="@{/}">
         <img height="30" src="/images/logo.png" width="30">
     </a>
-    <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+    <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+            class="navbar-toggler"
             data-bs-toggle="collapse" data-target="#navbarSupportedContent" type="button">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -77,14 +91,17 @@
                 </a>
             </li>
             <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
-                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                <a aria-expanded="false" aria-haspopup="true" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                   href="#"
                    id="userDropdown" role="button">
                     <!-- 이미지가 존재하면 이미지를, 그렇지 않으면 아바타를 보여주도록 수정(시작) -->
                     <svg class="rounded border bg-light"
-                         height="24" th:data-jdenticon-value="${#authentication.name}" th:if="${#strings.isEmpty(account?.profile?.image)}"
+                         height="24" th:data-jdenticon-value="${#authentication.name}"
+                         th:if="${#strings.isEmpty(account?.profile?.image)}"
                          width="24"></svg><!--"프로필" 대신 아바타 이미지를 보여줌-->
                     <img class="rounded border"
-                         height="24" th:if="${!#strings.isEmpty(account?.profile?.image)}" th:src="${account.profile.image}" width="24"/>
+                         height="24" th:if="${!#strings.isEmpty(account?.profile?.image)}"
+                         th:src="${account.profile.image}" width="24"/>
                     <!-- 이미지가 존재하면 이미지를, 그렇지 않으면 아바타를 보여주도록 수정(끝) -->
                 </a>
                 <div aria-labelledby="userDropdown" class="dropdown-menu dropdown-menu-sm-end">
@@ -107,17 +124,22 @@
 <!--스터디 메뉴, 파라미터로 아이템을 전달받아 보여줌-->
 <div class="row px-3 justify-content-center bg-light" th:fragment="study-menu (studyMenu)">
     <nav class="col-10 nav nav-tabs">
-        <a class="nav-item nav-link" href="#" th:classappend="${studyMenu == 'info'}? active" th:href="@{'/study/' + ${study.path}}">
+        <a class="nav-item nav-link" href="#" th:classappend="${studyMenu == 'info'}? active"
+           th:href="@{'/study/' + ${study.path}}">
             <i class="fa fa-info-circle"></i> 소개
         </a>
-        <a class="nav-item nav-link" href="#" th:classappend="${studyMenu == 'members'}? active" th:href="@{'/study/' + ${study.path} + '/members'}">
+        <a class="nav-item nav-link" href="#" th:classappend="${studyMenu == 'members'}? active"
+           th:href="@{'/study/' + ${study.path} + '/members'}">
             <i class="fa fa-user"></i> 구성원
         </a>
-        <a class="nav-item nav-link" href="#" th:classappend="${studyMenu == 'events'}? active" th:href="@{'/study/' + ${study.path} + '/events'}">
+        <a class="nav-item nav-link" href="#" th:classappend="${studyMenu == 'events'}? active"
+           th:href="@{'/study/' + ${study.path} + '/events'}">
             <i class="fa fa-calendar"></i> 모임
         </a>
         <a class="nav-item nav-link" href="#"
-           sec:authorize="isAuthenticated()" th:classappend="${studyMenu == 'settings'}? active" th:href="@{'/study/' + ${study.path} + '/settings/description'}" th:if="${study.isManager(#authentication.principal)}">
+           sec:authorize="isAuthenticated()" th:classappend="${studyMenu == 'settings'}? active"
+           th:href="@{'/study/' + ${study.path} + '/settings/description'}"
+           th:if="${study.isManager(#authentication.principal)}">
             <i class="fa fa-cog"></i> 설정
         </a>
     </nav>
@@ -136,7 +158,7 @@
                 <span class="h2" th:text="${study.title}">스터디 이름</span>
             </a>
         </div>
-        <div class="col-4 text-right justify-content-end">
+        <div class="col-4 text-end justify-content-end">
             <!--스터디를 공개하지 않았을 경우-->
             <span class="d-inline-block" data-bs-toggle="tooltip" data-placement="bottom" tabindex="0"
                   th:if="${!study.published}" title="공개 준비중입니다.">
@@ -170,7 +192,7 @@
                   role="group" sec:authorize="isAuthenticated()"
                   th:if="${!study.closed && study.isMember(#authentication.principal)}">
                 <!--스터디 가입 링크-->
-                <a class="btn btn-outline-warning" th:href="@{'/study/' + ${study.path} + '/leave'}">
+             <a class="btn btn-outline-danger" th:href="@{'/study/' + ${study.path} + '/leave'}">
                     스터디 탈퇴
                 </a>
                 <!--스터디 멤버 수-->
@@ -182,7 +204,7 @@
                   th:if="${study.published && !study.closed && study.isManager(#authentication.principal)}">
                 <!--모임 만들기 링크-->
                 <a class="btn btn-outline-primary" th:href="@{'/study/' + ${study.path} + '/new-event'}">
-                    <i class>a fa-plus"></i> 모임 만들기
+                    <i class="fa fa-plus"></i> 모임 만들기
                 </a>
             </span>
         </div>
@@ -218,8 +240,10 @@
     <ul class="list-unstyled col-10">
         <li class="d-flex mt-3" th:each="member: ${members}">
             <div class="flex-shrink-0">
-                <svg class="rounded border bg-light me-3" height="64" th:data-jdenticon-value="${member.nickname}" th:if="${#strings.isEmpty(member?.profile?.image)}" width="64"></svg>
-                <img class="rounded border me-3" height="64" th:if="${!#strings.isEmpty(member?.profile?.image)}" th:src="${member?.profile?.image}" width="64"/>
+                <svg class="rounded border bg-light me-3" height="64" th:data-jdenticon-value="${member.nickname}"
+                     th:if="${#strings.isEmpty(member?.profile?.image)}" width="64"></svg>
+                <img class="rounded border me-3" height="64" th:if="${!#strings.isEmpty(member?.profile?.image)}"
+                     th:src="${member?.profile?.image}" width="64"/>
             </div>
             <div class="flex-grow-1 ms-3">
                 <h5 class="mt-0 mb-1">
@@ -234,15 +258,20 @@
 
 <div class="list-group" th:fragment="study-settings-menu (currentMenu)">
     <a class="list-group-item list-group-item-action" href="#"
-       th:classappend="${currentMenu == 'description'}? active" th:href="@{'/study/' + ${study.path} + '/settings/description'}">소개</a>
+       th:classappend="${currentMenu == 'description'}? active"
+       th:href="@{'/study/' + ${study.path} + '/settings/description'}">소개</a>
     <a class="list-group-item list-group-item-action" href="#"
-       th:classappend="${currentMenu == 'image'}? active" th:href="@{'/study/' + ${study.path} + '/settings/banner'}">배너 이미지</a>
+       th:classappend="${currentMenu == 'image'}? active" th:href="@{'/study/' + ${study.path} + '/settings/banner'}">배너
+        이미지</a>
     <a class="list-group-item list-group-item-action" href="#"
-       th:classappend="${currentMenu == 'tags'}? active" th:href="@{'/study/' + ${study.path} + '/settings/tags'}">스터디 주제</a>
+       th:classappend="${currentMenu == 'tags'}? active" th:href="@{'/study/' + ${study.path} + '/settings/tags'}">스터디
+        주제</a>
     <a class="list-group-item list-group-item-action" href="#"
-       th:classappend="${currentMenu == 'zones'}? active" th:href="@{'/study/' + ${study.path} + '/settings/zones'}">활동 지역</a>
+       th:classappend="${currentMenu == 'zones'}? active" th:href="@{'/study/' + ${study.path} + '/settings/zones'}">활동
+        지역</a>
     <a class="list-group-item list-group-item-action list-group-item-danger" href="#"
-       th:classappend="${currentMenu == 'study'}? active" th:href="@{'/study/' + ${study.path} + '/settings/study'}">스터디</a>
+       th:classappend="${currentMenu == 'study'}? active"
+       th:href="@{'/study/' + ${study.path} + '/settings/study'}">스터디</a>
 </div>
 
 

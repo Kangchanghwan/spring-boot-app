@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.AccessDeniedException;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -21,6 +19,43 @@ public class StudyService {
     private final StudyRepository studyRepository;
 
 
+    public Study getStudyToUpdateStatus(Account account, String path){
+        return  getStudy(account,path,studyRepository.findStudyWithManagersByPath(path));
+    }
+
+    public void publish(Study study){
+        study.published();
+    }
+    public void close(Study study){
+        study.close();
+    }
+    public void startRecruit(Study study){
+        study.startRecruit();
+    }
+    public void stopRecruit(Study study){
+        study.stopRecruit();
+    }
+    public boolean isValidPath(String newPath){
+        if(!newPath.matches(StudyForm.VALID_PATH_PATTERN)){
+            return false;
+        }
+        return !studyRepository.existsByPath(newPath);
+    }
+    public void updateStudyPath(Study study, String newPath){
+        study.updatePath(newPath);
+    }
+    public boolean isValidTitle(String newTitle){
+        return newTitle.length() <= 50;
+    }
+    public void updateStudyTitle(Study study,String newTitle){
+        study.updateTitle(newTitle);
+    }
+    public void remove(Study study){
+        if (!study.isRemovable()) {
+            throw new IllegalArgumentException("스터디를 삭제할 수 없습니다.");
+        }
+        studyRepository.delete(study);
+    }
 
     public Study createNewStudy( StudyForm studyForm, Account account){
         Study study = Study.from(studyForm);
@@ -28,11 +63,9 @@ public class StudyService {
         return studyRepository.save(study);
     }
 
-    public Study getStudy(Account account, String path) throws AccessDeniedException {
-        Study study = getStudy(path);
-        if(!account.isManagerOf(study)){
-            throw new AccessDeniedException("해당 기능을 사용할 수 없습니다.");
-        }
+    public Study getStudy(Account account, String path) {
+        Study study = studyRepository.findByPath(path);
+        checkStudyExists(path,study);
         return study;
     }
 
@@ -100,5 +133,22 @@ public class StudyService {
 
     public void removeZone(Study study, Zone zone) {
         study.removeZone(zone);
+    }
+
+    public Study getStudyToUpdate(Account account, String path){
+        return getStudy(account,path,studyRepository.findByPath(path));
+    }
+
+    private Study getStudy(Account account, String path, Study studyByPath) {
+        checkStudyExists(path,studyByPath);
+        checkAccountIsManager(account,studyByPath);
+        return studyByPath;
+    }
+
+    public void addMember(Study study, Account account) {
+        study.addMember(account);
+    }
+    public void removeMember(Study study,Account account){
+        study.removeMember(account);
     }
 }
