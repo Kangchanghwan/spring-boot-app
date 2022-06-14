@@ -6,6 +6,9 @@
     <title>email-verification</title>
 </head>
 <body>
+<div>
+<div th:replace="layout/fragments.html :: study-banner"></div>
+
 <div class="container">
     <div th:replace="layout/fragments.html :: study-info"></div>
 
@@ -14,6 +17,7 @@
 
     <div th:replace="layout/fragments.html :: member-list (${study.managers},${true})"></div>
     <div th:replace="layout/fragments.html :: member-list (${study.members},${false})"></div>
+</div>
 </div>
 <script th:replace="layout/fragments.html :: tooltip">
 </script>

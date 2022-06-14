@@ -7,46 +7,55 @@
 </head>
 <body>
 <div>
-<div class="container">
-    <div th:replace="layout/fragments.html :: study-info"></div>
-    <div th:replace="layout/fragments.html :: study-menu(studyMenu='settings')"></div>
-    <div class="row mt-3 justify-content-center">
-        <div class="col-2">
-            <div th:replace="layout/fragments.html :: study-settings-menu(currentMenu='description')"></div>
-        </div>
-        <div class="col-8">
-            <div th:replace="layout/fragments.html :: message"></div>
-            <form class="needs-validation" method="post"
-                  novalidate th:action="@{'/study/' + ${study.getPath()} + '/settings/description'}" th:object="${studyDescriptionForm}">
-                <div class="form-group my-3">
-                    <label for="shortDescription">짧은 소개</label>
-                    <textarea aria-describedby="shortDescriptionHelp" class="form-control" id="shortDescription" maxlength="100"
-                              placeholder="짧은 소개" required th:field="*{shortDescription}" type="text"></textarea>
-                    <small class="form-text text-muted" id="shortDescriptionHelp">
-                        100자 이하로 스터디를 짧게 소개해 주세요.
-                    </small>
-                    <small class="invalid-feedback">짧은 소개를 입력하세요.</small>
-                    <small class="form-text text-danger" th:errors="*{shortDescription}"
-                           th:if="${#fields.hasErrors('shortDescription')}">ShortDescription Error</small>
+    <div>
+        <div th:replace="layout/fragments.html :: study-banner"></div>
+        <div class="container">
+            <div th:replace="layout/fragments.html :: study-info"></div>
+            <div th:replace="layout/fragments.html :: study-menu(studyMenu='settings')"></div>
+            <div class="row mt-3 justify-content-center">
+                <div class="col-2">
+                    <div th:replace="layout/fragments.html :: study-settings-menu(currentMenu='description')"></div>
                 </div>
+                <div class="col-8">
+                    <div th:replace="layout/fragments.html :: message"></div>
+                    <form class="needs-validation" method="post"
+                          novalidate th:action="@{'/study/' + ${study.getPath()} + '/settings/description'}"
+                          th:object="${studyDescriptionForm}">
+                        <div class="form-group my-3">
+                            <label for="shortDescription">짧은 소개</label>
+                            <textarea aria-describedby="shortDescriptionHelp" class="form-control" id="shortDescription"
+                                      maxlength="100"
+                                      placeholder="짧은 소개" required th:field="*{shortDescription}"
+                                      type="text"></textarea>
+                            <small class="form-text text-muted" id="shortDescriptionHelp">
+                                100자 이하로 스터디를 짧게 소개해 주세요.
+                            </small>
+                            <small class="invalid-feedback">짧은 소개를 입력하세요.</small>
+                            <small class="form-text text-danger" th:errors="*{shortDescription}"
+                                   th:if="${#fields.hasErrors('shortDescription')}">ShortDescription Error</small>
+                        </div>
 
-                <div class="form-group my-3">
-                    <label for="fullDescription">상세 소개</label>
-                    <textarea aria-describedby="fullDescriptionHelp" class="form-control" id="fullDescription" placeholder="스터디를 자세히 설명해 주세요."
-                              required th:field="*{fullDescription}" type="text"></textarea>
-                    <small class="invalid-feedback">상세 소개를 입력하세요.</small>
-                    <small class="form-text text-danger" th:errors="*{fullDescription}"
-                           th:if="${#fields.hasErrors('fullDescription')}">FullDescription Error</small>
+                        <div class="form-group my-3">
+                            <label for="fullDescription">상세 소개</label>
+                            <textarea aria-describedby="fullDescriptionHelp" class="form-control" id="fullDescription"
+                                      placeholder="스터디를 자세히 설명해 주세요."
+                                      required th:field="*{fullDescription}" type="text"></textarea>
+                            <small class="invalid-feedback">상세 소개를 입력하세요.</small>
+                            <small class="form-text text-danger" th:errors="*{fullDescription}"
+                                   th:if="${#fields.hasErrors('fullDescription')}">FullDescription Error</small>
+                        </div>
+                        <div class="form-group">
+                            <button aria-describedby="submitHelp" class="btn btn-primary btn-block"
+                                    type="submit">수정하기
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <button aria-describedby="submitHelp" class="btn btn-primary btn-block"
-                            type="submit">수정하기</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
-</div>
+
 <script th:replace="layout/fragments.html :: editor-script"></script>
 <script th:replace="layout/fragments.html :: tooltip">
 </script>

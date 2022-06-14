@@ -1,3 +1,7 @@
+server:
+  tomcat:
+    max-http-form-post-size: 5MB
+
 spring:
   datasource:
     username: testuser # 위에서 설정한 사용자 정보 입니다.
@@ -28,3 +32,5 @@ logging:
       type.descriptor.sql.BasicBinder: trace # 로그 레벨 설정 추가
 app:
   host: http://localhost:8080
+
+

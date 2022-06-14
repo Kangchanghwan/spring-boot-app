@@ -6,17 +6,22 @@
     <title>email-verification</title>
 </head>
 <body>
-<div class="container">
-    <div th:replace="layout/fragments.html :: study-info"></div>
+<div>
+    <div th:replace="layout/fragments.html :: study-banner"></div>
 
-    <!--스터디 메뉴-->
-    <div th:replace="layout/fragments.html :: study-menu(info)"></div>
+    <div class="container">
+        <div th:replace="layout/fragments.html :: study-info"></div>
 
-    <!--스터디 상세 소개-->
-    <div class="row px-3 justify-content-center">
-        <div class="col-10 pt-3" th:utext="${study.fullDescription}"></div> <!--utext는 HTML 렌더링함-->
+        <!--스터디 메뉴-->
+        <div th:replace="layout/fragments.html :: study-menu(info)"></div>
+
+        <!--스터디 상세 소개-->
+        <div class="row px-3 justify-content-center">
+            <div class="col-10 pt-3" th:utext="${study.fullDescription}"></div> <!--utext는 HTML 렌더링함-->
+        </div>
     </div>
 </div>
+
 <script th:replace="layout/fragments.html :: tooltip">
 </script>
 </body>

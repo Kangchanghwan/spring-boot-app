@@ -19,7 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -57,6 +57,64 @@ public class StudySettingControllerTest {
         studyRepository.deleteAll();
     }
 
+
+    @Test
+    @DisplayName("스터디 배너 사용")
+    @WithAccount("abc")
+    void updateStudyEnableBanner () throws Exception{
+        Account account = accountRepository.findByNickname("abc");
+        mockMvc.perform(post("/study/"+ path +"/settings/banner/enable")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + path + "/settings/banner"));
+        Study study = studyService.getStudy(account,path);
+        assertTrue(study.useBanner());
+    }
+
+    @Test
+    @DisplayName("스터디 배너 미사용")
+    @WithAccount("abc")
+    void updateStudyDisableBanner () throws Exception{
+        Account account = accountRepository.findByNickname("abc");
+        mockMvc.perform(post("/study/"+ path +"/settings/banner/disable")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + path + "/settings/banner"));
+        Study study = studyService.getStudy(account,path);
+        assertFalse(study.useBanner());
+    }
+
+
+
+
+    @Test
+    @DisplayName("스터디 배너 수정: 정상")
+    @WithAccount("abc")
+    void updateStudyBanner () throws Exception{
+        Account account = accountRepository.findByNickname("abc");
+        String image = "test-image";
+        mockMvc.perform(post("/study/"+ path +"/settings/banner")
+                        .param("image", image)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + path + "/settings/banner"));
+        Study study = studyService.getStudy(account,path);
+        assertEquals(image, study.getImage());
+    }
+
+
+    @Test
+    @DisplayName("스터디 세팅 폼 조회(배너)")
+    @WithAccount("abc")
+    void studySettingFormBanner () throws Exception{
+        mockMvc.perform(get("/study/"+ path +"/settings/banner"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("study/settings/banner"))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("study"));
+    }
+
+
     @Test
     @DisplayName("스터디 세팅 폼 조회")
     @WithAccount("abc")
@@ -84,6 +142,23 @@ public class StudySettingControllerTest {
         Study study = studyService.getStudy(account,path);
         assertEquals(shortDescriptionToBeUpdate, study.getShortDescription());
         assertEquals(fullDescriptionToBeUpdate, study.getFullDescription());
+    }
+    @Test
+    @DisplayName("스터디 세팅 수정: 입력값 에러")
+    @WithAccount("abc")
+    void createStudyWithError () throws Exception{
+        Account account =  accountRepository.findByNickname("abc");
+        String shortDescriptionToBeUpdate = "";
+        String fullDescriptionToBeUpdate = "";
+        mockMvc.perform(post("/study/"+ path +"/settings/description")
+                        .param("shortDescription", shortDescriptionToBeUpdate)
+                        .param("fullDescription",fullDescriptionToBeUpdate)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors());
+        Study study = studyService.getStudy(account,path);
+        assertNotEquals(shortDescriptionToBeUpdate, study.getShortDescription());
+        assertNotEquals(fullDescriptionToBeUpdate, study.getFullDescription());
     }
 
 }

@@ -6,7 +6,6 @@ import clone.jaime.app.springbootapp.server.study.application.StudyService;
 import clone.jaime.app.springbootapp.server.study.domain.entity.Study;
 import clone.jaime.app.springbootapp.server.study.endpoint.form.StudyDescriptionForm;
 import clone.jaime.app.springbootapp.server.study.endpoint.validator.StudyFormValidator;
-import clone.jaime.app.springbootapp.server.study.infra.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,16 +25,58 @@ import java.nio.file.AccessDeniedException;
 public class StudySettingController {
 
 
-    private final StudyRepository studyRepository;
     private final StudyService studyService;
 
     private final StudyFormValidator studyFormValidator;
+
+
+    private String encode(String path){
+        return URLEncoder.encode(path, StandardCharsets.UTF_8);
+    }
+
+
+    @GetMapping("/banner")
+    public String studyImageForm(@CurrentUser Account account,
+                                 @PathVariable String path, Model model){
+        Study study = studyService.getStudy(path);
+        model.addAttribute(account);
+        model.addAttribute(study);
+        return "study/settings/banner";
+    }
+    @PostMapping("/banner")
+    public String updateBanner(@CurrentUser Account account,
+                               @PathVariable String path,
+                               String image,
+                               RedirectAttributes attributes) throws AccessDeniedException {
+        Study study = studyService.getStudy(account,path);
+        studyService.updateStudyImage(study,image);
+        attributes.addFlashAttribute("message","스터디 이미지를 수정하였습니다.");
+        return "redirect:/study/"+ encode(path) + "/settings/banner";
+    }
+
+    @PostMapping("/banner/enable")
+    public String enableStudyBanner(@CurrentUser Account account,
+                                    @PathVariable String path) throws AccessDeniedException {
+        Study study = studyService.getStudy(account,path);
+        studyService.enableStudyBanner(study);
+        return "redirect:/study/" + encode(path) + "/settings/banner";
+    }
+    @PostMapping("/banner/disable")
+    public String disableStudyBanner(@CurrentUser Account account,
+                                    @PathVariable String path) throws AccessDeniedException {
+        Study study = studyService.getStudy(account,path);
+        studyService.disableStudyBanner(study);
+        return "redirect:/study/" + encode(path) + "/settings/banner";
+    }
 
 
     @InitBinder("studyForm")
     public void studyFormInitBinder(WebDataBinder webDataBinder){
         webDataBinder.addValidators(studyFormValidator);
     }
+
+
+
 
     @GetMapping("/description")
     public String viewStudySetting(@CurrentUser Account account , @PathVariable String path, Model model) throws AccessDeniedException {
@@ -66,10 +107,6 @@ public class StudySettingController {
         attributes.addFlashAttribute("message","스터디 소개를 수정했습니다.");
         return "redirect:/study/"+encode(path) + "/settings/description";
     }
-    private String encode(String path){
-        return URLEncoder.encode(path, StandardCharsets.UTF_8);
-    }
-
 
 
 }
