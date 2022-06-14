@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
-public class SettingController {
+public class AccountSettingController {
     static final String SETTINGS_ZONES_VIEW_NAME = "settings/zones";
 
     static final String SETTINGS_ZONES_URL = "/" + SETTINGS_ZONES_VIEW_NAME;

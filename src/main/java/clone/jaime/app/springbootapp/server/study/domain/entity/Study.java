@@ -24,6 +24,16 @@ attributeNodes = {
         @NamedAttributeNode("managers"),
         @NamedAttributeNode("members"),
 })
+@NamedEntityGraph(
+        name ="Study.withTagsAndManagers", attributeNodes = {
+                @NamedAttributeNode("tags"),
+                @NamedAttributeNode("managers")
+})
+@NamedEntityGraph(
+        name ="Study.withZonesAndManagers", attributeNodes = {
+        @NamedAttributeNode("zones"),
+        @NamedAttributeNode("managers")
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Study {
@@ -108,6 +118,22 @@ public class Study {
 
     public void setBanner(boolean useBanner) {
         this.useBanner = useBanner;
+    }
+
+    public void addTag(Tag tag) {
+        this.tags.add(tag);
+    }
+
+    public void removeTag(Tag tag) {
+        this.tags.remove(tag);
+    }
+
+    public void addZone(Zone zone) {
+        this.zones.add(zone);
+    }
+
+    public void removeZone(Zone zone) {
+        this.zones.remove(zone);
     }
     // 스터디의 관리자 여부
 

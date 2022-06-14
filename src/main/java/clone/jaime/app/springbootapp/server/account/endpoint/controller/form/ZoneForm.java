@@ -1,8 +1,14 @@
 package clone.jaime.app.springbootapp.server.account.endpoint.controller.form;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ZoneForm {
 
     private String zoneName;

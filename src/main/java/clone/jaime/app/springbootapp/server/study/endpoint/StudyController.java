@@ -29,10 +29,14 @@ public class StudyController {
 
 
 
+
     @InitBinder("studyForm")
     public void studyInitBinder(WebDataBinder webDataBinder){
         webDataBinder.addValidators(studyFormValidator);
     }
+
+
+
 
 
     @GetMapping("/study/{path}/members")

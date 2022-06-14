@@ -30,54 +30,8 @@
         </div>
     </div>
 </div>
-<script th:inline="javascript" type="application/javascript">
-    $(function () {
-        let csrfToken = /*[[${_csrf.token}]]*/ null;
-        let csrfHeader = /*[[${_csrf.headerName}]]*/ null;
-        $(document).ajaxSend(function (e, xhr, options) {
-            xhr.setRequestHeader(csrfHeader, csrfToken);
-        });
-    });
-    $(function () {
-        function tagRequest(url, tagTitle) {
-            $.ajax({
-                dataType: "json",
-                autocomplete: {
-                    enabled: true,
-                    rightKey: true
-                },
-                contentType: "application/json; charset=utf-8",
-                method: "POST",
-                url: "/settings/tags" + url,
-                data: JSON.stringify({'tagTitle': tagTitle})
-            }).done(function (data, status) {
-                console.log("${data} and status is #{status}")
-            })
-        }
-
-        function onAdd(e) {
-            tagRequest("/add", e.detail.data.value);
-        }
-
-        function onRemove(e) {
-            tagRequest("/remove", e.detail.data.value);
-        }
-
-        let tagInput = document.querySelector("#tags");
-        let tagify = new Tagify(tagInput, {
-            pattern: /^.{0,20}$/,
-            whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
-            dropdown: {
-                enabled: 1
-            }
-        });
-
-        tagify.on("add", onAdd);
-        tagify.on("remove", onRemove);
-
-        tagify.DOM.input.classList.add('form-control');
-    });
-</script>
+<script th:replace="layout/fragments.html :: ajax-csrf-header"></script>
+<script th:replace="layout/fragments.html :: update-tags(baseUrl='/settings/tags')"></script>
 
 </body>
 </html>
