@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+//참가
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of="id")
@@ -18,11 +19,11 @@ public class Enrollment {
     private Long id;
 
 
-    @ManyToOne (cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne (cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     private Event event;
 
-    @ManyToOne (cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne (cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 
