@@ -19,6 +19,9 @@ public class StudyService {
     private final StudyRepository studyRepository;
 
 
+
+
+
     public Study getStudyToUpdateStatus(Account account, String path){
         return  getStudy(account,path,studyRepository.findStudyWithManagersByPath(path));
     }
@@ -150,5 +153,12 @@ public class StudyService {
     }
     public void removeMember(Study study,Account account){
         study.removeMember(account);
+    }
+
+    public Study getStudyToEnroll(String path){
+        return studyRepository.findStudyByPath(path)
+                .orElseThrow(
+                        ()->new IllegalArgumentException( path + "에 해당하는 스터디가 존재하지 않습니다.")
+                );
     }
 }

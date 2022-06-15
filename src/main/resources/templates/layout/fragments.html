@@ -58,7 +58,7 @@
     </a>
     <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
             class="navbar-toggler"
-            data-bs-toggle="collapse" data-target="#navbarSupportedContent" type="button">
+            data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" type="button">
         <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -455,7 +455,7 @@
 <!--툴팁 스크립트-->
 <script th:fragment="tooltip" type="application/javascript">
     $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
+        $('[data-bs-toggle="tooltip"]').tooltip()
     })
 </script>
 <script th:fragment="ajax-csrf-header" th:inline="javascript" type="application/javascript">

@@ -3,6 +3,10 @@ server:
     max-http-form-post-size: 5MB
 
 spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
   datasource:
     username: testuser # 위에서 설정한 사용자 정보 입니다.
     password: testpass # 위에서 설정한 사용자 정보 입니다.

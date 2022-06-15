@@ -21,11 +21,11 @@
             <div class="col-4 text-end justify-content-end">
                 <span sec:authorize="isAuthenticated()">
                     <button class="btn btn-outline-primary"
-                            data-target="#enroll" data-toggle="modal" th:if="${event.isEnrollableFor(#authentication.principal)}">
+                            data-bs-target="#enroll" data-bs-toggle="modal" th:if="${event.isEnrollableFor(#authentication.principal)}">
                         <i class="fa fa-plus-circle"></i> 참가 신청
                     </button>
                     <button class="btn btn-outline-primary"
-                            data-target="#disenroll" data-toggle="modal" th:if="${event.isDisenrollableFor(#authentication.principal)}">
+                            data-bs-target="#disenroll" data-bs-toggle="modal" th:if="${event.isDisenrollableFor(#authentication.principal)}">
                         <i class="fa fa-minus-circle"></i> 참가 신청 취소
                     </button>
                     <span class="text-success" disabled th:if="${event.isAttended(#authentication.principal)}">
@@ -38,7 +38,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="leaveTitle" th:text="${event.title}"></h5>
-                            <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <button aria-label="Close" class="close" data-bs-dismiss="modal" type="button">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -48,7 +48,7 @@
                             <p>감사합니다.</p>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-secondary" data-dismiss="modal" type="button">닫기</button>
+                            <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">닫기</button>
                             <form method="post" th:action="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/leave'}">
                                 <button aria-describedby="submitHelp" class="btn btn-primary" type="submit">확인</button>
                             </form>
@@ -61,7 +61,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="enrollmentTitle" th:text="${event.title}"></h5>
-                            <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <button aria-label="Close" class="close" data-bs-dismiss="modal" type="button">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -71,7 +71,7 @@
                             <p>감사합니다.</p>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-secondary" data-dismiss="modal" type="button">닫기</button>
+                            <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">닫기</button>
                             <form method="post" th:action="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/enroll'}">
                                 <button aria-describedby="submitHelp" class="btn btn-primary" type="submit">확인</button>
                             </form>
@@ -183,7 +183,7 @@
                        th:href="@{'/study/' + ${study.path} + '/events/' + ${event.id} + '/edit'}" >
                         모임 수정
                     </a> <br/>
-                    <button class="btn btn-outline-danger btn-sm" data-target="#cancel" data-toggle="modal">
+                    <button class="btn btn-outline-danger btn-sm" data-bs-target="#cancel" data-bs-toggle="modal">
                         모임 취소
                     </button>
                 </dd>
@@ -193,7 +193,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="cancelTitle" th:text="${event.title}"></h5>
-                            <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                            <button aria-label="Close" class="close" data-bs-dismiss="modal" type="button">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -203,7 +203,7 @@
                             <p>감사합니다.</p>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-secondary" data-dismiss="modal" type="button">닫기</button>
+                            <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">닫기</button>
                             <form th:action="@{'/study/' + ${study.path} + '/events/' + ${event.id}}" th:method="delete">
                                 <button aria-describedby="submitHelp" class="btn btn-primary" type="submit">확인</button>
                             </form>

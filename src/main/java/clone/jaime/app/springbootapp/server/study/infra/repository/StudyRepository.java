@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Repository
 @Transactional(readOnly = true)
 public interface StudyRepository extends JpaRepository<Study,Long> {
@@ -28,5 +30,6 @@ public interface StudyRepository extends JpaRepository<Study,Long> {
     Study findStudyWithMembersByPath(String path);
     //Path가 존재하는지 확인하는 메서드
 
+    Optional<Study> findStudyByPath (String path);
 
 }
