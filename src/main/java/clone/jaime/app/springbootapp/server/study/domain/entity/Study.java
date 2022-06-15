@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @NamedEntityGraph(name = "Study.withAll",
@@ -159,7 +160,14 @@ public class Study {
     }
     // 스터디의 멤버 여부
     public boolean isManager(UserAccount userAccount){
-        return this.managers.contains(userAccount.getAccount());
+        return !this.managers.stream()
+                .filter(
+                        m -> userAccount
+                                .getAccount()
+                                .getEmail()
+                                .equals(m.getEmail()))
+                .collect(Collectors.toList())
+                .isEmpty();
     }
 
     public void updateDescription(StudyDescriptionForm studyDescriptionForm) {

@@ -1,5 +1,6 @@
 package clone.jaime.app.springbootapp.server.event.validator;
 
+import clone.jaime.app.springbootapp.server.event.domain.entity.Event;
 import clone.jaime.app.springbootapp.server.event.endpoint.form.EventForm;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -43,4 +44,11 @@ public class EventValidator implements Validator {
         return time.isBefore(targetTime);
     }
 
+    public void validateUpdateForm(EventForm eventForm, Event event, Errors errors) {
+
+        if(eventForm.getLimitOfEnrollments() < event.getNumberOfAcceptedEnrollments()) {
+            errors.rejectValue("limitOfEnrollments","wrong.value","확인된 참가신청보다 모집 인원 수가 커야합니다.");
+        }
+
+    }
 }

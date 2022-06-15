@@ -18,6 +18,9 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -34,6 +37,32 @@ public class EventController {
     @InitBinder("eventForm")
     public void initBinder(WebDataBinder webDataBinder){
         webDataBinder.addValidators(eventValidator);
+    }
+
+
+
+
+    @GetMapping("/events")
+    public String viewStudyEvents(@CurrentUser Account account,
+                                  @PathVariable String path,
+                                  Model model){
+        Study study = studyService.getStudy(path);
+        model.addAttribute(account);
+        model.addAttribute(study);
+
+        List<Event> events = eventRepository.findByStudyOrderByStartDateTime(study);
+        List<Event> newEvents = new ArrayList<>();
+        List<Event> oldEvents = new ArrayList<>();
+        for(Event event : events){
+            if(event.getEndDateTime().isBefore(LocalDateTime.now())){
+                oldEvents.add(event);
+            }else{
+                newEvents.add(event);
+            }
+        }
+        model.addAttribute("newEvents",newEvents);
+        model.addAttribute("oldEvents",oldEvents);
+        return "event/events";
     }
 
     @GetMapping("/events/{id}")
@@ -75,6 +104,44 @@ public class EventController {
         model.addAttribute(account);
         model.addAttribute(new EventForm());
         return "event/form";
+    }
+
+
+    @GetMapping("/events/{id}/edit")
+    public String updateEventForm(@CurrentUser Account account,
+                               @PathVariable String path,
+                               @PathVariable Long id,
+                               Model model){
+        Study study = studyService.getStudyToUpdateStatus(account,path);
+        Event event = eventRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("모임이 존재하지 않습니다."));
+        model.addAttribute(study);
+        model.addAttribute(account);
+        model.addAttribute(event);
+        model.addAttribute(new EventForm());
+        return "event/update-form";
+    }
+
+    @PostMapping("/events/{id}/edit")
+    public String updateEventSubmit(@CurrentUser Account account,
+                                  @PathVariable String path,
+                                  @PathVariable Long id,
+                                  @Valid EventForm eventForm,
+                                  Errors errors,
+                                  Model model){
+        Study study = studyService.getStudyToUpdateStatus(account,path);
+        Event event = eventRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("모임이 존재하지 않습니다."));
+        eventForm.setEventType(event.getEventType());
+        eventValidator.validateUpdateForm(eventForm,event,errors);
+        if(errors.hasErrors()){
+            model.addAttribute(account);
+            model.addAttribute(study);
+            model.addAttribute(event);
+            return "event/update-form";
+        }
+        eventService.updateEvent(event,eventForm);
+        return "redirect:/study/" + study.getEncodePath() + "/events/" + event.getId();
     }
 
 }

@@ -22,4 +22,7 @@ public class EventService {
         return eventRepository.save(event);
     }
 
+    public void updateEvent(Event event, EventForm eventForm) {
+        event.updateFrom(eventForm);
+    }
 }

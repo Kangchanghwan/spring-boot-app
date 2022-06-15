@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/common :: layout(~{::title},~{::div},~{::script})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>email-verification</title>
+</head>
+<body>
+<div>
+    <div th:replace="layout/fragments.html :: study-banner"></div>
+
+    <div class="container">
+        <div th:replace="layout/fragments.html::event-form (mode='edit', action='/study/' + ${study.path} + '/events/' + ${event.id} + '/edit')"></div>
+    </div>
+</div>
+<script th:replace="layout/fragments.html :: form-validation"></script>
+<script th:replace="layout/fragments.html :: editor-script"></script>
+</script>
+</body>
+</html>

@@ -16,6 +16,10 @@ import java.util.List;
 @Getter
 @ToString
 @EqualsAndHashCode(of = "id")
+@NamedEntityGraph(
+        name = "Event.withEnrollments",
+        attributeNodes = @NamedAttributeNode("enrollments")
+)
 public class Event {
 
     @Id
@@ -105,4 +109,28 @@ public class Event {
         return false;
     }
 
+    //현재 가입자 수 확인
+    public int numberOfRemainSpots() {
+        int accepted = (int) this.enrollments.stream()
+                .filter(Enrollment::isAttend)
+                .count();
+        return this.limitOfEnrollments - accepted;
+    }
+
+    public Long getNumberOfAcceptedEnrollments(){
+        return this.enrollments.stream()
+                .filter(Enrollment::isAccepted)
+                .count();
+    }
+    //참가자 수?
+
+    public void updateFrom(EventForm eventForm) {
+        this.title = eventForm.getTitle();
+        this.description = eventForm.getDescription();
+        this.eventType = eventForm.getEventType();
+        this.startDateTime = eventForm.getStartDateTime();
+        this.endDateTime = eventForm.getEndDateTime();
+        this.limitOfEnrollments = eventForm.getLimitOfEnrollments();
+        this.endEnrollmentDateTime = eventForm.getEndEnrollmentDateTime();
+    }
 }
